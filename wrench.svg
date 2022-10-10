@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+	<title>wrench</title>
+	<defs>
+		<image  width="56" height="116" id="img-border" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAB0CAMAAADnwgE7AAAAAXNSR0IB2cksfwAAADlQTFRFAAAAAAAA6Vwi31Ah6l8i0Ese6l4i6Foi5FIh6Fki51ci4lEg5lQi5lMi51gi5FQh5VYh4FQh31IhynQLdQAAABN0Uk5TAP8AAAAAAAAAAAAAAAAAAAAAAPWNZywAAACqSURBVHic7dbLDoMgEIVhbLXae/X9H7ZnGiahFKyJG2Zy/pUBvoWMC0OIdbFQqbpvBMrCAf2DR/R1xgiUhx5thQP6nCNsDp6Qd2hoHLvhiEpY1iZkGeoHcEYX1GUJuiKrUF8+hTd0j+ml/CBjUHEO06EXkTGoWHqgJ0ovpIqMQcUluIoICQkJCQkJCQmbgfKz6x0aGgfhCnwh73BGC/IMhyxvUHHaJtQufAMe/D/hoSmV5wAAAABJRU5ErkJggg=="/>
+		<image  width="48" height="108" id="img-color" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAABsBAMAAADeYCw4AAAAAXNSR0IB2cksfwAAAB5QTFRFKzcpk6qPjqaKhqCCkqqOkKiMkqmOj6eLkamOkaiNhwnxGAAAAAp0Uk5TAP///////////36JFFYAAABtSURBVHicY2BgEBRkQANKSmCKahKCgtgkjI1HJQZOwsUFWTg0lDYSaWkI4fJyakuAUhZIogMMQBZDhakqwcAAk4B4DS5MVQkQSEuDBh46GJUYlRiVGJUYlRiyEjNn0l5CSQml2qKJhDEU0EACAOZR6tEbbgkrAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+	</style>
+	<use id="border" href="#img-border" x="36" y="8"/>
+	<use id="color" href="#img-color" x="40" y="12"/>
+</svg>
