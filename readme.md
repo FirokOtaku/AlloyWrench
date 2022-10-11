@@ -44,3 +44,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * [DOTA 数据集](https://captain-whu.github.io/DOTA/index.html)
 * [YOLO 框架](https://github.com/ultralytics/yolov5)
 
+## changelog
+
+* 0.2.0
+  * error fixes
+* 0.1.0
+  * init commit

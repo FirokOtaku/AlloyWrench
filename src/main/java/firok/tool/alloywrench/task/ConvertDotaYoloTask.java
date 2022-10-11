@@ -123,13 +123,70 @@ public class ConvertDotaYoloTask
 
 			// 开始转换
 			var listDotaLabel = DotaReader.read(raw, imageWidth, imageHeight);
-			var textYoloLabel = convert(listDotaLabel, mapping);
+			var decimalWidth = new BigDecimal(imageWidth);
+			var decimalHeight = new BigDecimal(imageHeight);
+			for(var label : listDotaLabel)
+			{
+				DecimalPoint pt1 = label.pt1(), pt2 = label.pt2(), pt3 = label.pt3(), pt4 = label.pt4();
+				checkMax(pt1, decimalWidth, decimalHeight);
+				checkMax(pt2, decimalWidth, decimalHeight);
+				checkMax(pt3, decimalWidth, decimalHeight);
+				checkMax(pt4, decimalWidth, decimalHeight);
+				checkMin0(pt1);
+				checkMin0(pt2);
+				checkMin0(pt3);
+				checkMin0(pt4);
+			}
+			var textYoloLabel = new StringBuffer();
+			listDotaLabel.stream().parallel().forEach(labelDota -> {
+
+				var min = new DecimalPoint(_min, _min);
+				var max = new DecimalPoint(_max, _max);
+				findMin(min, labelDota.pt1().x, labelDota.pt1().y);
+				findMin(min, labelDota.pt2().x, labelDota.pt2().y);
+				findMin(min, labelDota.pt3().x, labelDota.pt3().y);
+				findMin(min, labelDota.pt4().x, labelDota.pt4().y);
+				findMax(max, labelDota.pt1().x, labelDota.pt1().y);
+				findMax(max, labelDota.pt2().x, labelDota.pt2().y);
+				findMax(max, labelDota.pt3().x, labelDota.pt3().y);
+				findMax(max, labelDota.pt4().x, labelDota.pt4().y);
+
+				var orderClass = mapping.get(labelDota.catalog());
+				if(orderClass == null)
+				{
+					System.out.printf("找不到映射, 跳过 [%s]\n", labelDota.catalog());
+					return;
+				}
+
+				// center = (max + min) / 2 / total
+				// range = box / total
+				// 进行一个六位小数的保留
+				var boxWidth = max.x.subtract(min.x);
+				var boxHeight = max.y.subtract(min.y);
+				var centerX = max.x.add(min.x).divide(BD2, 6, RoundingMode.HALF_UP).divide(decimalWidth, 6, RoundingMode.HALF_UP);
+				var centerY = max.y.add(min.y).divide(BD2, 6, RoundingMode.HALF_UP).divide(decimalHeight, 6, RoundingMode.HALF_UP);
+				var rangeX = boxWidth.divide(decimalWidth, 6, RoundingMode.HALF_UP);
+				var rangeY = boxHeight.divide(decimalHeight, 6, RoundingMode.HALF_UP);
+
+//				if(centerX.compareTo(BigDecimal.ONE) > 0 || centerY.compareTo(BigDecimal.ONE) > 0)
+//					new RuntimeException("center calc exception");
+//				if(rangeX.compareTo(BigDecimal.ONE) > 0 || rangeY.compareTo(BigDecimal.ONE) > 0)
+//					new RuntimeException("range calc exception");
+
+				var center = new DecimalPoint(centerX, centerY);
+				var range = new DecimalPoint(rangeX, rangeY);
+
+				var labelYolo = new YoloLabel(orderClass, center, range);
+
+				//noinspection StringConcatenationInsideStringBufferAppend
+				textYoloLabel.append(labelYolo.toLabelText() + '\n'); // 是的 我知道自己在干啥
+			});
 
 			// 开始写入
 			var fileOut = new File(folderTarget, fileIn.getName());
 			try(var ofs = new FileOutputStream(fileOut))
 			{
-				ofs.write(textYoloLabel.getBytes(StandardCharsets.UTF_8));
+				ofs.write(textYoloLabel.toString().getBytes(StandardCharsets.UTF_8));
 				ofs.flush();
 			}
 			catch (IOException any)
@@ -141,52 +198,24 @@ public class ConvertDotaYoloTask
 	}
 
 	public static final BigDecimal BD2 = new BigDecimal(2);
+	public static final BigDecimal _min = new BigDecimal(Long.MAX_VALUE);
+	public static final BigDecimal _max = new BigDecimal(Long.MIN_VALUE);
 
-	public static String convert(List<DotaLabel> list, Map<String, Integer> mapClassOrder)
+	private static void checkMax(DecimalPoint pt, BigDecimal maxX, BigDecimal maxY)
 	{
-		var ret = new StringBuffer();
-		list.stream().parallel().forEach(labelDota -> {
-			var _min = new BigDecimal(Long.MAX_VALUE);
-			var _max = new BigDecimal(Long.MIN_VALUE);
-
-			var min = new DecimalPoint(_min, _min);
-			var max = new DecimalPoint(_max, _max);
-			findMin(min, labelDota.pt1().x, labelDota.pt1().y);
-			findMin(min, labelDota.pt2().x, labelDota.pt2().y);
-			findMin(min, labelDota.pt3().x, labelDota.pt3().y);
-			findMin(min, labelDota.pt4().x, labelDota.pt4().y);
-			findMax(max, labelDota.pt1().x, labelDota.pt1().y);
-			findMax(max, labelDota.pt2().x, labelDota.pt2().y);
-			findMax(max, labelDota.pt3().x, labelDota.pt3().y);
-			findMax(max, labelDota.pt4().x, labelDota.pt4().y);
-
-			var orderClass = mapClassOrder.get(labelDota.catalog());
-			if(orderClass == null)
-			{
-				System.out.printf("找不到映射, 跳过 [%s]\n", labelDota.catalog());
-				return;
-			}
-
-			// center = (max - min) / 2
-			// range = box / total
-			// 进行一个六位小数的保留
-			var boxWidth = max.x.subtract(min.x);
-			var boxHeight = max.y.subtract(min.y);
-			var centerX = boxWidth.divide(BD2, 6, RoundingMode.HALF_UP);
-			var centerY = boxHeight.divide(BD2, 6, RoundingMode.HALF_UP);
-			var rangeX = boxWidth.divide(new BigDecimal(labelDota.imageWidth()), 6, RoundingMode.HALF_UP);
-			var rangeY = boxHeight.divide(new BigDecimal(labelDota.imageHeight()), 6, RoundingMode.HALF_UP);
-
-			var center = new DecimalPoint(centerX, centerY);
-			var range = new DecimalPoint(rangeX, rangeY);
-
-			var labelYolo = new YoloLabel(orderClass, center, range);
-
-			//noinspection StringConcatenationInsideStringBufferAppend
-			ret.append(labelYolo.toLabelText() + '\n'); // 是的 我知道自己在干啥
-		});
-		return ret.toString();
+		if(pt.x.compareTo(maxX) > 0)
+			pt.x = maxX;
+		if(pt.y.compareTo(maxY) > 0)
+			pt.y = maxY;
 	}
+	private static void checkMin0(DecimalPoint pt)
+	{
+		if(pt.x.compareTo(BigDecimal.ZERO) < 0)
+			pt.x = BigDecimal.ZERO;
+		if(pt.y.compareTo(BigDecimal.ZERO) < 0)
+			pt.y = BigDecimal.ZERO;
+	}
+
 	private static void findMin(DecimalPoint pt, BigDecimal x, BigDecimal y)
 	{
 		if(pt.x.compareTo(x) > 0)
