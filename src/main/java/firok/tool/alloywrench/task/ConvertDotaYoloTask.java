@@ -98,10 +98,13 @@ public class ConvertDotaYoloTask
 				return;
 			}
 
+
 			// 读取图片元信息
 			var filename = fileIn.getName();
 			var pictureId = filename.substring(0, filename.indexOf('.'));
 			var fileImage = new File(folderImage, pictureId + ".png");
+			System.out.printf("处理文件 [%s]\n", filename);
+
 			if(!fileImage.exists() || !fileImage.isFile())
 			{
 				System.out.printf("找不到相应图片文件, 跳过文件 [%s]\n", fileImage.getAbsolutePath());
@@ -125,9 +128,12 @@ public class ConvertDotaYoloTask
 			var listDotaLabel = DotaReader.read(raw, imageWidth, imageHeight);
 			var decimalWidth = new BigDecimal(imageWidth);
 			var decimalHeight = new BigDecimal(imageHeight);
-			for(var label : listDotaLabel)
-			{
-				DecimalPoint pt1 = label.pt1(), pt2 = label.pt2(), pt3 = label.pt3(), pt4 = label.pt4();
+			var textYoloLabel = new StringBuffer();
+			listDotaLabel.stream().parallel().forEach(labelDota -> {
+				// DOTA 集里的数据有的点在图片外面, 绝了
+				// 这里手动处理一下, 省的转换之后的 YOLO 标签有问题
+				DecimalPoint pt1 = labelDota.pt1(), pt2 = labelDota.pt2(),
+						pt3 = labelDota.pt3(), pt4 = labelDota.pt4();
 				checkMax(pt1, decimalWidth, decimalHeight);
 				checkMax(pt2, decimalWidth, decimalHeight);
 				checkMax(pt3, decimalWidth, decimalHeight);
@@ -136,23 +142,21 @@ public class ConvertDotaYoloTask
 				checkMin0(pt2);
 				checkMin0(pt3);
 				checkMin0(pt4);
-			}
-			var textYoloLabel = new StringBuffer();
-			listDotaLabel.stream().parallel().forEach(labelDota -> {
 
+				// 寻找标签边界点
 				var min = new DecimalPoint(_min, _min);
 				var max = new DecimalPoint(_max, _max);
-				findMin(min, labelDota.pt1().x, labelDota.pt1().y);
-				findMin(min, labelDota.pt2().x, labelDota.pt2().y);
-				findMin(min, labelDota.pt3().x, labelDota.pt3().y);
-				findMin(min, labelDota.pt4().x, labelDota.pt4().y);
-				findMax(max, labelDota.pt1().x, labelDota.pt1().y);
-				findMax(max, labelDota.pt2().x, labelDota.pt2().y);
-				findMax(max, labelDota.pt3().x, labelDota.pt3().y);
-				findMax(max, labelDota.pt4().x, labelDota.pt4().y);
+				findMin(min, pt1.x, pt1.y);
+				findMin(min, pt2.x, pt2.y);
+				findMin(min, pt3.x, pt3.y);
+				findMin(min, pt4.x, pt4.y);
+				findMax(max, pt1.x, pt1.y);
+				findMax(max, pt2.x, pt2.y);
+				findMax(max, pt3.x, pt3.y);
+				findMax(max, pt4.x, pt4.y);
 
-				var orderClass = mapping.get(labelDota.catalog());
-				if(orderClass == null)
+				var classId = mapping.get(labelDota.catalog());
+				if(classId == null)
 				{
 					System.out.printf("找不到映射, 跳过 [%s]\n", labelDota.catalog());
 					return;
@@ -176,7 +180,7 @@ public class ConvertDotaYoloTask
 				var center = new DecimalPoint(centerX, centerY);
 				var range = new DecimalPoint(rangeX, rangeY);
 
-				var labelYolo = new YoloLabel(orderClass, center, range);
+				var labelYolo = new YoloLabel(classId, center, range);
 
 				//noinspection StringConcatenationInsideStringBufferAppend
 				textYoloLabel.append(labelYolo.toLabelText() + '\n'); // 是的 我知道自己在干啥
@@ -194,6 +198,8 @@ public class ConvertDotaYoloTask
 				System.out.printf("写入文件发生错误, 跳过文件 [%s]\n", fileOut.getAbsolutePath());
 				return;
 			}
+
+			System.out.printf("完成处理 [%s]\n", filename);
 		});
 	}
 

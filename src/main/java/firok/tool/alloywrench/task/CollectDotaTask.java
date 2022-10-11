@@ -49,6 +49,9 @@ public class CollectDotaTask
 					return;
 				}
 
+				var filename = fileLabel.getName();
+				System.out.printf("处理文件 [%s]\n", filename);
+
 				// 这里用不着读取图片文件, 直接赋 0
 				var listLabel = DotaReader.read(raw, 0, 0);
 				listLabel.stream()
@@ -63,6 +66,8 @@ public class CollectDotaTask
 						mapping.put(category, size);
 					}
 				});
+
+				System.out.printf("完成处理 [%s]\n", filename);
 			});
 		});
 
@@ -77,5 +82,7 @@ public class CollectDotaTask
 			System.out.printf("写入映射文件出错 [%s]\n", any.getMessage());
 			return;
 		}
+
+		System.out.println("写入映射完成");
 	}
 }
