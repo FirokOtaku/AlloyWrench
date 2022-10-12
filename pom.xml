@@ -6,7 +6,7 @@
 
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 
     <properties>
         <java.version>17</java.version>
@@ -88,6 +88,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.graalvm.nativeimage</groupId>-->
+<!--                <artifactId>native-image-maven-plugin</artifactId>-->
+<!--                <version>21.2.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>native-image</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>package</phase>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <skip>false</skip>-->
+<!--                    <imageName>example</imageName>-->
+<!--                    <buildArgs>-->
+<!--                        &#45;&#45;no-fallback-->
+<!--                    </buildArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.openjfx</groupId>

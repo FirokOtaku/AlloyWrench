@@ -61,6 +61,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.5.0
+  * reformat help information
 * 0.4.0
   * add label viewer GUI
   * minor code improvement
@@ -77,3 +79,5 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * DOTA 集里有些打点在图片外, 非常真实
 * DOTA 集的标签文件换行符是 `/r/n` 哟
 * 突然发现 JavaFX 当 Swing 写也可以嘛
+* native-image + JavaFX + --no-fallback = BOOM
+* native-image + Swing + --no-fallback = BOOM

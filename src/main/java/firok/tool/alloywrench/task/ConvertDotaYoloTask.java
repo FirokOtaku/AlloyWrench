@@ -4,17 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import firok.tool.alloywrench.bean.DecimalPoint;
-import firok.tool.alloywrench.bean.DotaLabel;
 import firok.tool.alloywrench.bean.YoloLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
 
 import javax.imageio.ImageIO;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class ConvertDotaYoloTask
 {

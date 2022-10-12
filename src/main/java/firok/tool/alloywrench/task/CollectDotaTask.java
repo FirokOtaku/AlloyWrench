@@ -5,7 +5,8 @@ import firok.tool.alloywrench.bean.DotaLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
