@@ -2,6 +2,7 @@ package firok.tool.alloywrench;
 
 import firok.tool.alloywrench.task.CollectDotaTask;
 import firok.tool.alloywrench.task.ConvertDotaYoloTask;
+import firok.tool.alloywrench.task.RendererDotaTask;
 
 public class AlloyWrench
 {
@@ -19,6 +20,8 @@ public class AlloyWrench
 			System.arraycopy(args, 3, pathSourceFolders, 0, pathSourceFolders.length);
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
+		else if(len == 1 && "renderer".equals(args[0]))
+			RendererDotaTask.execute();
 		else
 			printHelp();
 	}
@@ -39,6 +42,9 @@ public class AlloyWrench
 				{image-folder} 图片目录
 				{mapping-file} CLASS ID 映射文件
 				{target-folder} 目标目录
+				
+				打开标签数据可视化工具
+				renderer
 				""");
 	}
 

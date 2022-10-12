@@ -146,14 +146,7 @@ public class ConvertDotaYoloTask
 				// 寻找标签边界点
 				var min = new DecimalPoint(_min, _min);
 				var max = new DecimalPoint(_max, _max);
-				findMin(min, pt1.x, pt1.y);
-				findMin(min, pt2.x, pt2.y);
-				findMin(min, pt3.x, pt3.y);
-				findMin(min, pt4.x, pt4.y);
-				findMax(max, pt1.x, pt1.y);
-				findMax(max, pt2.x, pt2.y);
-				findMax(max, pt3.x, pt3.y);
-				findMax(max, pt4.x, pt4.y);
+				DecimalPoint.range(min, max, pt1, pt2, pt3, pt4);
 
 				var classId = mapping.get(labelDota.catalog());
 				if(classId == null)
@@ -171,11 +164,6 @@ public class ConvertDotaYoloTask
 				var centerY = max.y.add(min.y).divide(BD2, 6, RoundingMode.HALF_UP).divide(decimalHeight, 6, RoundingMode.HALF_UP);
 				var rangeX = boxWidth.divide(decimalWidth, 6, RoundingMode.HALF_UP);
 				var rangeY = boxHeight.divide(decimalHeight, 6, RoundingMode.HALF_UP);
-
-//				if(centerX.compareTo(BigDecimal.ONE) > 0 || centerY.compareTo(BigDecimal.ONE) > 0)
-//					new RuntimeException("center calc exception");
-//				if(rangeX.compareTo(BigDecimal.ONE) > 0 || rangeY.compareTo(BigDecimal.ONE) > 0)
-//					new RuntimeException("range calc exception");
 
 				var center = new DecimalPoint(centerX, centerY);
 				var range = new DecimalPoint(rangeX, rangeY);
@@ -220,20 +208,5 @@ public class ConvertDotaYoloTask
 			pt.x = BigDecimal.ZERO;
 		if(pt.y.compareTo(BigDecimal.ZERO) < 0)
 			pt.y = BigDecimal.ZERO;
-	}
-
-	private static void findMin(DecimalPoint pt, BigDecimal x, BigDecimal y)
-	{
-		if(pt.x.compareTo(x) > 0)
-			pt.x = x;
-		if(pt.y.compareTo(y) > 0)
-			pt.y = y;
-	}
-	private static void findMax(DecimalPoint pt, BigDecimal x, BigDecimal y)
-	{
-		if(pt.x.compareTo(x) < 0)
-			pt.x = x;
-		if(pt.y.compareTo(y) < 0)
-			pt.y = y;
 	}
 }

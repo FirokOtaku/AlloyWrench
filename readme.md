@@ -48,6 +48,10 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  ".\dota-1.0\train\images" ^
  ".\playground\mapping.json" ^
  ".\playground\train-labels"
+
+# 启动数据标签可视化工具
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ renderer dota
 ```
 
 ## 相关链接
@@ -57,6 +61,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.4.0
+  * add label viewer GUI
+  * minor code improvement
 * 0.3.0
   * print more log information
   * update readme
@@ -69,3 +76,4 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 * DOTA 集里有些打点在图片外, 非常真实
 * DOTA 集的标签文件换行符是 `/r/n` 哟
+* 突然发现 JavaFX 当 Swing 写也可以嘛
