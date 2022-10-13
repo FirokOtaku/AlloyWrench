@@ -5,7 +5,6 @@ import firok.tool.alloywrench.bean.DotaLabel;
 import firok.tool.alloywrench.bean.YoloLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -29,34 +28,12 @@ import java.util.Map;
 import static firok.tool.alloywrench.task.ConvertDotaYoloTask._max;
 import static firok.tool.alloywrench.task.ConvertDotaYoloTask._min;
 
-public class RendererDotaTask extends Application
+public class RendererDotaTask extends FxBase
 {
 	public static void execute()
 	{
 		launch();
 	}
-	private void showError(Exception exception)
-	{
-		exception.printStackTrace(System.err);
-		var alert = new Alert(Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
-		alert.setTitle("Error");
-		alert.setWidth(300);
-		alert.setHeight(200);
-		alert.showAndWait();
-	}
-	private File showFileChooser(String title, FileChooser.ExtensionFilter... filters) throws MalformedURLException
-	{
-		var fc = new FileChooser();
-		fc.setTitle(title);
-		fc.getExtensionFilters().addAll(filters == null ? new FileChooser.ExtensionFilter[] { ALL } : filters);
-		return fc.showOpenDialog(stage);
-	}
-	private String toURI(File file) throws MalformedURLException
-	{
-		return file == null ? null : file.toURI().toURL().toString();
-	}
-
-	Stage stage;
 
 	Text textOffset;
 	Text textKeymap;
@@ -116,13 +93,6 @@ public class RendererDotaTask extends Application
 	boolean isDisplayLabelInfo = true;
 
 	boolean isDisplayUI = true;
-
-	private static final FileChooser.ExtensionFilter ALL
-			= new FileChooser.ExtensionFilter("All files", "*.*");
-	private static final FileChooser.ExtensionFilter IMAGES
-			= new FileChooser.ExtensionFilter("Image files", "*.png", "*.jpg", "*.jpeg", "*.img");
-	private static final FileChooser.ExtensionFilter TEXTS
-			= new FileChooser.ExtensionFilter("Text files", "*.txt");
 
 	void clickLoadImage()
 	{
@@ -266,10 +236,8 @@ public class RendererDotaTask extends Application
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception
+	void postStart()
 	{
-		this.stage = stage;
-
 		canvas = new Canvas();
 		textKeymap = new Text("""
 				[P] - Load image
@@ -348,7 +316,5 @@ public class RendererDotaTask extends Application
 			relocateImage(offsetX + (int)(curX - preX), offsetY + (int)(curY - preY));
 		});
 		stage.setScene(scene);
-		stage.show();
-
 	}
 }

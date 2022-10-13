@@ -29,38 +29,54 @@ java -jar alloy-wrench-jar-with-dependencies.jar
 # 整理成一个 json
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  collect dota ^
- ".\playground\mapping.json" ^
- ".\dota-1.0\train\labelTxt" ^
- ".\dota-1.0\val\labelTxt"
+ "./playground/mapping.json" ^
+ "./dota-1.0/train/labelTxt" ^
+ "./dota-1.0/val/labelTxt"
 
 # 将 DOTA 数据标签文件转换成 YOLO 格式的
 # 需要用到上面读取创建的映射 json
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert dota yolo ^ 
- ".\dota-1.0\val\labelTxt" ^
- ".\dota-1.0\val\images" ^
- ".\playground\mapping.json" ^
- ".\playground\val-labels"
+ "./dota-1.0/val/labelTxt" ^
+ "./dota-1.0/val/images" ^
+ "./playground/mapping.json" ^
+ "./playground/val-labels"
 
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert dota yolo ^
- ".\dota-1.0\train\labelTxt" ^
- ".\dota-1.0\train\images" ^
- ".\playground\mapping.json" ^
- ".\playground\train-labels"
+ "./dota-1.0/train/labelTxt" ^
+ "./dota-1.0/train/images" ^
+ "./playground/mapping.json" ^
+ "./playground/train-labels"
+
+# 将 labelme 创建的 JSON 数据文件转换为 YOLO 格式的
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert labelme yolo ^
+ "./labelme-labels.json" ^
+ "./yolo-labels.txt" ^
+ "./mapping.json"
 
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  renderer dota
+
+# 启动数据标记工具
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ marker
 ```
 
 ## 相关链接
 
 * [DOTA 数据集](https://captain-whu.github.io/DOTA/index.html)
 * [YOLO 框架](https://github.com/ultralytics/yolov5)
+* [labelme 工具](https://github.com/wkentaro/labelme)
 
 ## changelog
 
+* 0.6.0
+  * add convert from _labelme_ json to yolo text
+  * minor code improvement
+  * add Java module support
 * 0.5.0
   * reformat help information
 * 0.4.0
