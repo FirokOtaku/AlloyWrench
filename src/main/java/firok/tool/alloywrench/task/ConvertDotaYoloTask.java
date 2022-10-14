@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
@@ -178,10 +179,10 @@ public class ConvertDotaYoloTask
 
 			// 开始写入
 			var fileOut = new File(folderTarget, fileIn.getName());
-			try(var ofs = new FileOutputStream(fileOut))
+			try(var out = new PrintStream(fileOut, StandardCharsets.UTF_8))
 			{
-				ofs.write(textYoloLabel.toString().getBytes(StandardCharsets.UTF_8));
-				ofs.flush();
+				out.println(textYoloLabel);
+				out.flush();
 			}
 			catch (IOException any)
 			{

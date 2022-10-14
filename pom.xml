@@ -60,6 +60,13 @@
             <artifactId>org.jfree.skijagraphics2d</artifactId>
             <version>1.0.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>firok</groupId>
+            <artifactId>topaz</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

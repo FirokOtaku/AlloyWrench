@@ -2,7 +2,7 @@
 
 一些 ~~研究~~ 折腾机器视觉框架时候用到的 ~~工具~~ 轮子代码.
 
-代码基于 **Java 17**, 以 MIT 协议开源.
+代码基于 **Java 17**, 依赖 [Topaz 库](https://github.com/FirokOtaku/Topaz), 以 MIT 协议开源.
 
 > _为什么用 Java?_  
 > 因为主业是写 Java 的, 写着习惯
@@ -56,6 +56,20 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./yolo-labels.txt" ^
  "./mapping.json"
 
+# 将 labelme 创建的 JSON 数据文件转换为 DOTA 格式的
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert labelme dota ^
+ "./labelme-labels.json" ^
+ "./dota-labels.txt"
+
+# 切分图片和相关 DOTA 标签数据
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ cut ^
+ "./raw.png" ^
+ "./raw.txt" ^
+ "./sub-images" ^
+ "./sub-labels"
+
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  renderer dota
@@ -73,6 +87,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.7.0
+  * add image-and-labels cutter
 * 0.6.0
   * add convert from _labelme_ json to yolo text
   * minor code improvement

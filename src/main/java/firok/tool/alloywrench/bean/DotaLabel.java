@@ -1,5 +1,7 @@
 package firok.tool.alloywrench.bean;
 
+import java.math.BigDecimal;
+
 /**
  * 代表一个 DOTA 格式数据标签
  */
@@ -8,6 +10,17 @@ public record DotaLabel(DecimalPoint pt1, DecimalPoint pt2,
                         String catalog, boolean isDifficult,
                         int imageWidth, int imageHeight)
 {
+	public DotaLabel subtract(BigDecimal offsetX, BigDecimal offsetY)
+	{
+		return new DotaLabel(
+				pt1.subtractOf(offsetX, offsetY),
+				pt2.subtractOf(offsetX, offsetY),
+				pt3.subtractOf(offsetX, offsetY),
+				pt4.subtractOf(offsetX, offsetY),
+				catalog, isDifficult,
+				imageWidth, imageHeight
+		);
+	}
 	public String toLabelText()
 	{
 		return "%s %s %s %s %s %s %s %s %s %d".formatted(

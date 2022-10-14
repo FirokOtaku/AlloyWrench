@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class ConvertLabelmeYoloTask
 
 			System.out.println("创建标签文件");
 			var fileOut = new File(pathYolo);
-			try(var out = new PrintStream(fileOut))
+			try(var out = new PrintStream(fileOut, StandardCharsets.UTF_8))
 			{
 				for(var labelYolo : listYolo)
 					out.println(labelYolo.toLabelText());

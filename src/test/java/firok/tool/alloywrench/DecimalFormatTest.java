@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class DecimalFormatTest
 {
-	@Test
+//	@Test
 	void test()
 	{
 		var d1 = new BigDecimal("0.123456789");

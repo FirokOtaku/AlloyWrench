@@ -16,7 +16,7 @@ public class NumbersTest
 		Assertions.assertEquals(goal, Numbers.subnum(new BigDecimal(raw)));
 	}
 
-	@Test
+//	@Test
 	public void test()
 	{
 		testOne("0.123", "0.123");

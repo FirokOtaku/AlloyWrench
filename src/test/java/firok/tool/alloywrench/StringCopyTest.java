@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class StringCopyTest
 {
-	@Test
+//	@Test
 	public void test()
 	{
 		var source = new String[10];
