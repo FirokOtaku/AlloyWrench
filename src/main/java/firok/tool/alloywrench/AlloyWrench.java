@@ -7,7 +7,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.7.0";
+	public static final String version = "0.8.0";
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	public static void main(String[] args)
@@ -77,7 +77,7 @@ public class AlloyWrench
 				
 				* 打开标签数据可视化工具
 				> renderer
-				""", name, version, author, link, Topaz.NAME, Topaz.VERSION);
+				""", name, version, author, Topaz.NAME, Topaz.VERSION, link);
 	}
 
 

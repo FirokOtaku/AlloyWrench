@@ -63,6 +63,11 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./dota-labels.txt"
 
 # 切分图片和相关 DOTA 标签数据
+# 如果只希望输出切片图片或切片标签
+# 需要手动修改代码里的 CutImageTask.OUTPUT_CUT_IMAGE 和 CutImageTask.OUTPUT_CUT_LABEL 值
+# 如果需要调整输出图片的大小等参数
+# 需要手动修改代码里的 CutImageTask.OVERLYING_X 和 CutImageTask.PIECE_X 等参数
+# 为什么用这种方式 因为懒得从代码接收参数了
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  cut ^
  "./raw.png" ^
@@ -87,6 +92,10 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.8.0
+  * now we could calculate overlaps
+    between labels and cutting area
+    when cutting images
 * 0.7.0
   * add image-and-labels cutter
 * 0.6.0
