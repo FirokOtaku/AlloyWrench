@@ -5,6 +5,7 @@ import firok.tool.alloywrench.bean.DotaLabel;
 import firok.tool.alloywrench.bean.YoloLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
+import firok.topaz.RegexPipeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -14,22 +15,29 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import static firok.tool.alloywrench.task.ConvertDotaYoloTask._max;
 import static firok.tool.alloywrench.task.ConvertDotaYoloTask._min;
 
 public class RendererDotaTask extends FxBase
 {
+	private static final RegexPipeline pp = new RegexPipeline();
 	public static void execute()
 	{
 		launch();
@@ -44,7 +52,7 @@ public class RendererDotaTask extends FxBase
 	Scene scene;
 	Canvas canvas;
 	List<BoxEntry> listBox = new ArrayList<>();
-	record BoxEntry(Node poly, Text text, Object label, DecimalPoint min, DecimalPoint max) { }
+	record BoxEntry(Polygon poly, Text text, Shape[] points, Object label, DecimalPoint min, DecimalPoint max) { }
 
 	double preX = 0, preY = 0;
 	int offsetX = 0, offsetY = 0;
@@ -61,6 +69,18 @@ public class RendererDotaTask extends FxBase
 			box.text.setLayoutY(offsetY + box.min.y.doubleValue());
 			box.poly.setLayoutX(offsetX);
 			box.poly.setLayoutY(offsetY);
+
+			var points = box.poly.getPoints();
+			var sx = points.get(0);
+			var sy = points.get(1);
+			for(int step = 0; step < 4; step++)
+			{
+				var px = points.get(step * 2);
+				var py = points.get(step * 2 + 1);
+				var point = box.points[step];
+				point.setLayoutX(px + offsetX);
+				point.setLayoutY(py + offsetY);
+			}
 		}
 	}
 
@@ -94,6 +114,22 @@ public class RendererDotaTask extends FxBase
 
 	boolean isDisplayUI = true;
 
+	private void loadImage(String url) throws Exception
+	{
+		var image = new Image(url);
+		var exception = image.getException();
+		if(exception != null) throw exception;
+
+		ii = new ImageInfo(url, image);
+		textImageInfo.setText("Image: [%s]; [%d × %d]".formatted(url, (int) image.getWidth(), (int) image.getHeight()));
+
+		var gra = canvas.getGraphicsContext2D();
+		gra.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		canvas.setWidth(image.getWidth());
+		canvas.setHeight(image.getHeight());
+		gra.drawImage(image, 0, 0);
+	}
 	void clickLoadImage()
 	{
 		try
@@ -102,24 +138,99 @@ public class RendererDotaTask extends FxBase
 			var url = toURI(file);
 			if(url == null) return;
 
-			var image = new Image(url);
-			var exception = image.getException();
-			if(exception != null) throw exception;
+			System.out.println("加载图片: " + url);
+			loadImage(url);
 
-			ii = new ImageInfo(url, image);
-			textImageInfo.setText("Image: [%s]; [%d × %d]".formatted(url, (int) image.getWidth(), (int) image.getHeight()));
+			var path = file.getAbsolutePath();
 
-			var gra = canvas.getGraphicsContext2D();
-			gra.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			path = pp.replaceFirst(path, "\\.png|\\.jpg", Matcher.quoteReplacement(".txt"));
+			var checkNearbyFile = new File(path);
+			System.out.println("寻找标签: " + checkNearbyFile);
+			if(checkNearbyFile.exists() && checkNearbyFile.isFile())
+			{
+				loadDotaLabels(checkNearbyFile);
+				System.out.println("加载标签");
+				return;
+			}
 
-			canvas.setWidth(image.getWidth());
-			canvas.setHeight(image.getHeight());
-			gra.drawImage(image, 0, 0);
+			var path2 = pp.replaceFirst(path, "images", "labelTxt");
+			if(!path2.equals(path))
+			{
+				var checkNearbyFolder = new File(path2);
+				System.out.println("寻找标签: " + checkNearbyFolder);
+				if(checkNearbyFolder.exists() && checkNearbyFolder.isFile())
+				{
+					System.out.println("加载标签");
+					loadDotaLabels(checkNearbyFolder);
+					return;
+				}
+			}
+
+			System.out.println("未加载标签");
 		}
 		catch (Exception any)
 		{
 			showError(any);
 		}
+	}
+	void loadDotaLabels(File file) throws IOException
+	{
+		var children = pane.getChildren();
+
+		for(var box : listBox)
+		{
+			children.remove(box.poly);
+			children.remove(box.text);
+			children.removeAll(box.points);
+		}
+
+		listBox.clear();
+
+		var raw = Files.read(file);
+		var listLabel = DotaReader.read(raw, 0, 0);
+		var info = new DotaLabelInfo();
+		info.labels = listLabel;
+
+		for(var label : listLabel)
+		{
+			DecimalPoint pt1 = label.pt1(), pt2 = label.pt2(),
+					pt3 = label.pt3(), pt4 = label.pt4();
+
+			var poly = new Polygon(
+					pt1.x.doubleValue(),
+					pt1.y.doubleValue(),
+					pt2.x.doubleValue(),
+					pt2.y.doubleValue(),
+					pt3.x.doubleValue(),
+					pt3.y.doubleValue(),
+					pt4.x.doubleValue(),
+					pt4.y.doubleValue()
+			);
+			poly.setFill(Color.TRANSPARENT);
+			poly.setStroke(Color.GREEN);
+			poly.setStrokeWidth(1.5);
+			poly.setStrokeType(StrokeType.OUTSIDE);
+			var text = new Text(label.catalog());
+			text.setStroke(Color.BLUE);
+			children.add(poly);
+			children.add(text);
+
+			var points = new Shape[] {
+					new Circle(0, 0, 3.5, Color.LIGHTPINK),
+					new Circle(0, 0, 3.5, Color.HOTPINK),
+					new Circle(0, 0, 3.5, Color.INDIANRED),
+					new Circle(0, 0, 3.5, Color.DARKRED),
+			};
+			children.addAll(points);
+
+			DecimalPoint min = new DecimalPoint(_min, _min), max = new DecimalPoint(_max, _max);
+			DecimalPoint.range(min, max, pt1, pt2, pt3, pt4);
+			var box = new BoxEntry(poly, text, points, label, min, max);
+			listBox.add(box);
+		}
+		relocateImage(offsetX, offsetY);
+		li = info;
+		textLabelInfo.setText("Labels: [%s]; [%d]".formatted(file.getAbsolutePath(), listLabel.size()));
 	}
 	void clickLoadDotaLabels()
 	{
@@ -127,48 +238,7 @@ public class RendererDotaTask extends FxBase
 		{
 			var file = showFileChooser("Select text", TEXTS, ALL);
 			if(file == null) return;
-
-			var children = pane.getChildren();
-
-			for(var box : listBox)
-			{
-				children.remove(box.poly);
-				children.remove(box.text);
-			}
-			listBox.clear();
-
-			var raw = Files.read(file);
-			var listLabel = DotaReader.read(raw, 0, 0);
-			var info = new DotaLabelInfo();
-			info.labels = listLabel;
-
-			for(var label : listLabel)
-			{
-				DecimalPoint pt1 = label.pt1(), pt2 = label.pt2(),
-						pt3 = label.pt3(), pt4 = label.pt4();
-
-				var poly = new Polygon(
-						pt1.x.doubleValue(),
-						pt1.y.doubleValue(),
-						pt2.x.doubleValue(),
-						pt2.y.doubleValue(),
-						pt3.x.doubleValue(),
-						pt3.y.doubleValue(),
-						pt4.x.doubleValue(),
-						pt4.y.doubleValue()
-				);
-				var text = new Text(label.catalog());
-				children.add(poly);
-				children.add(text);
-
-				DecimalPoint min = new DecimalPoint(_min, _min), max = new DecimalPoint(_max, _max);
-				DecimalPoint.range(min, max, pt1, pt2, pt3, pt4);
-				var box = new BoxEntry(poly, text, label, min, max);
-				listBox.add(box);
-			}
-			relocateImage(offsetX, offsetY);
-			li = info;
-			textLabelInfo.setText("Labels: [%s]; [%d]".formatted(file.getAbsolutePath(), listLabel.size()));
+			loadDotaLabels(file);
 		}
 		catch (Exception any)
 		{
@@ -236,7 +306,7 @@ public class RendererDotaTask extends FxBase
 	}
 
 	@Override
-	void postStart()
+	protected void postStart()
 	{
 		canvas = new Canvas();
 		textKeymap = new Text("""

@@ -92,6 +92,11 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.9.0
+  * DOTA label renderer now will add points to indicate
+    where the polygon starts
+  * minor code improvement
+  * add label marker (unfinished)
 * 0.8.0
   * now we could calculate overlaps
     between labels and cutting area

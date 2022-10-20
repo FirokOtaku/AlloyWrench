@@ -7,7 +7,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.8.0";
+	public static final String version = "0.9.0";
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	public static void main(String[] args)

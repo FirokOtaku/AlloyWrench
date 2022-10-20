@@ -48,5 +48,5 @@ public abstract class FxBase extends Application
 		return file == null ? null : file.toURI().toURL().toString();
 	}
 
-	abstract void postStart();
+	protected abstract void postStart();
 }

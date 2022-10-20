@@ -41,7 +41,7 @@ public class CutImageTask
 	/**
 	 * 裁剪标签时的计算方式
 	 */
-	public static final int METHOD_CUT_LABEL = USE_OVERLAP;
+	public static final int METHOD_CUT_LABEL = USE_ALL_IN_OR_NO;
 
 
 	// 裁剪偏移量
