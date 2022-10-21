@@ -1,10 +1,9 @@
-package firok.tool.alloywrench.fx;
+package firok.tool.alloywrench.fx.marker;
 
-import firok.topaz.Shapes;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
-import static firok.tool.alloywrench.fx.MarkerScene.*;
+import static firok.tool.alloywrench.fx.FxApp.icon;
 
 class MarkerPolyCell extends ListCell<MarkerPoly> implements Callback<Class<?>, Object>
 {

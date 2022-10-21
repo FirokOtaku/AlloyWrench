@@ -1,10 +1,9 @@
-package firok.tool.alloywrench.fx;
+package firok.tool.alloywrench.fx.marker;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.Node;
+import firok.tool.alloywrench.fx.Event;
+import firok.tool.alloywrench.fx.IScene;
+import firok.topaz.Maths;
+import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,33 +11,25 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.Mnemonic;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import lombok.Getter;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.function.Consumer;
+
+
+import static firok.tool.alloywrench.fx.FxApp.icon;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class MarkerScene implements IScene
 {
-	static FontIcon icon(String key, Color fill)
-	{
-		var ret = new FontIcon(key);
-		ret.setIconColor(fill);
-		return ret;
-	}
-	static FontIcon icon(String key)
-	{
-		return icon(key, Color.BLACK);
-	}
-
-	public BooleanProperty isShowRightList = new SimpleBooleanProperty(true);
-	public BooleanProperty isShowBottomBar = new SimpleBooleanProperty(true);
-	public IntegerProperty viewportScale = new SimpleIntegerProperty(100);
+	public final BooleanProperty isShowRightList = new SimpleBooleanProperty(true);
+	public final BooleanProperty isShowBottomBar = new SimpleBooleanProperty(true);
+	public final IntegerProperty viewportScale = new SimpleIntegerProperty(100);
 	public void zoomIn()
 	{
 		int old = viewportScale.get();
@@ -51,25 +42,13 @@ public class MarkerScene implements IScene
 		if(old < 20) return;
 		viewportScale.setValue(old - 10);
 	}
+	private final ObjectProperty<? extends ITask> taskProperty = new SimpleObjectProperty<>(null);
 
-	private MenuItem miFile_loadImage;
-	private MenuItem miFile_loadDotaLabel;
-	private MenuItem miFile_loadYoloLabel;
-	private MenuItem miFile_loadJson;
-	private MenuItem miFile_saveJson;
-	private MenuItem miViewMove_moveBottom;
-	private MenuItem miViewMove_moveTop;
-	private MenuItem miViewMove_moveLeft;
-	private MenuItem miViewMove_moveRight;
-	private MenuItem miViewMove_jumpBottom;
-	private MenuItem miViewMove_jumpTop;
-	private MenuItem miViewMove_jumpLeft;
-	private MenuItem miViewMove_jumpRight;
-	private MenuItem miView_resetViewport;
-	private MenuItem miView_zoomIn;
-	private MenuItem miView_zoomOut;
-	private MenuItem miView_switchRightList;
-	private MenuItem miView_switchBottomBar;
+	private MenuItem miFile_loadImage, miFile_loadDotaLabel, miFile_loadYoloLabel, miFile_loadJson, miFile_saveJson,
+			miViewMove_moveBottom, miViewMove_moveTop, miViewMove_moveLeft, miViewMove_moveRight,
+			miViewMove_jumpBottom, miViewMove_jumpTop, miViewMove_jumpLeft, miViewMove_jumpRight,
+			miView_resetViewport, miView_zoomIn,
+			miView_zoomOut, miView_switchRightList, miView_switchBottomBar;
 	private MenuBar createMenuBar()
 	{
 		var menuFile = new Menu("文件", icon("mdi2f-file-outline"));
@@ -169,18 +148,15 @@ public class MarkerScene implements IScene
 		menubar.getMenus().addAll(menuFile, menuView);
 		return menubar;
 	}
-	Text textImageWidth;
-	Text textImageHeight;
-	Text textViewportScale;
-	Text textViewportX;
-	Text textViewportY;
+	Text textImageWidth, textImageHeight, textViewportScale, textViewportX, textViewportY, textTask;
+	ProgressBar progressTask;
 	private BorderPane createToolBar()
 	{
 		var boxToolbar = new BorderPane();
 
 		var toolbarTask = new ToolBar();
-		var textTask = new Text("无任务");
-		var progressTask = new ProgressBar(0.5);
+		textTask = new Text("无任务");
+		progressTask = new ProgressBar(0.5);
 		toolbarTask.getItems().addAll(
 				textTask, progressTask
 		);
@@ -266,48 +242,75 @@ public class MarkerScene implements IScene
 		var value = (v * fitHeight + 50) / fitHeight;
 		mid.setVvalue(Math.min(1, value));
 	}
+	private static double r01(double value)
+	{
+		return Maths.range(value, 0, 1);
+	}
+	/**
+	 * 根据图片真实坐标 移动到相应位置
+	 * */
+	public void moveRealCord(int x, int y)
+	{
+		var fitWidth = iv.getFitWidth();
+		var fitHeight = iv.getFitHeight();
+		mid.setHvalue(r01(x / fitWidth));
+		mid.setVvalue(r01(y / fitHeight));
+	}
+	private Pane midPane;
+	private void _handleImageViewScroll(ScrollEvent event)
+	{
+		var image = iv.getImage();
+		if (image == null) return;
+		var y = event.getDeltaY();
+		if (event.isControlDown()) // 按下 ctrl = 缩放
+		{
+			if (y > 0) zoomIn();
+			else zoomOut();
+		}
+		else // 移动视角
+		{
+			if (event.isAltDown()) // 横向移动
+			{
+				if (y > 0) moveLeft();
+				else moveRight();
+			}
+			else // 纵向移动
+			{
+				if (y > 0) moveUp();
+				else moveDown();
+			}
+		}
+		event.consume();
+	}
+	private void _handleImageViewClick(MouseEvent evt)
+	{
+		// 这个 XY 是 iv 空间坐标
+		var x = evt.getX();
+		var y = evt.getY();
+		int clickCount = evt.getClickCount();
+
+		var scale = viewportScale.get();
+
+		var realX = x * 100 / scale;
+		var realY = y * 100 / scale;
+
+		this.handleInnerEvent(new ClickImageEvent((int) realX, (int) realY, clickCount, evt));
+	}
 	private ScrollPane createMidImage()
 	{
 		var sp = new ScrollPane();
 
-		var pane = new Pane();
+		midPane = new Pane();
 
 		iv = new ImageView();
-		// 监听图片缩放事件
-		iv.setOnScroll(event -> {
-
-			var image = iv.getImage();
-			if(image == null) return;
-//			var width = image.getWidth();
-//			var height = image.getHeight();
-
-//			var x = event.getDeltaX();
-			var y = event.getDeltaY();
-
-			if(event.isControlDown()) // 按下 ctrl = 缩放
-			{
-				if(y > 0) zoomIn();
-				else zoomOut();
-			}
-			else // 移动视角
-			{
-				if(event.isAltDown()) // 横向移动
-				{
-					if(y > 0) moveLeft();
-					else moveRight();
-				}
-				else // 纵向移动
-				{
-					if(y > 0) moveUp();
-					else moveDown();
-				}
-			}
-
-			event.consume();
-		});
 		iv.setPreserveRatio(true);
+		iv.setLayoutX(0);
+		iv.setLayoutY(0);
 
-		sp.setContent(iv);
+		var children = midPane.getChildren();
+		children.add(iv);
+
+		sp.setContent(midPane);
 
 		return sp;
 	}
@@ -383,6 +386,38 @@ public class MarkerScene implements IScene
 			iv.setFitWidth(1D * width * scale / 100);
 			iv.setFitHeight(1D * height * scale / 100);
 		});
+		// 临时先这样吧 面板大小=图片大小
+		// 后面可能会增加面板大小 允许在图片外标点
+		midPane.minWidthProperty().bind(iv.fitWidthProperty());
+		midPane.maxWidthProperty().bind(iv.fitWidthProperty());
+		midPane.minHeightProperty().bind(iv.fitHeightProperty());
+		midPane.maxHeightProperty().bind(iv.fitHeightProperty());
+
+		// 同步任务进度
+		taskProperty.addListener(event -> {
+			var task = taskProperty.get();
+			if(task == null)
+			{
+				textTask.setVisible(false);
+				progressTask.setVisible(false);
+			}
+			else
+			{
+				textTask.setVisible(true);
+
+				var progressNow = task.getProgressNow();
+				var progressTotal = task.getProgressTotal();
+				if(progressNow < 0 || progressTotal < 0)
+				{
+					progressTask.setVisible(false);
+				}
+				else
+				{
+					progressTask.setVisible(true);
+					progressTask.progressProperty().set(task.getProgressPercent());
+				}
+			}
+		});
 
 	}
 	private Mnemonic addKey(MenuItem mi, KeyCombination key)
@@ -392,23 +427,12 @@ public class MarkerScene implements IScene
 		this.scene.addMnemonic(mn);
 		return mn;
 	}
-	private Mnemonic mnLoadImage;
-	private Mnemonic mnLoadDotaLabel;
-	private Mnemonic mnLoadYoloLabel;
-	private Mnemonic mnLoadJson;
-	private Mnemonic mnResetViewport;
-	private Mnemonic mnZoomIn;
-	private Mnemonic mnZoomOut;
-	private Mnemonic mnSwitchRightList;
-	private Mnemonic mnSwitchBottomBar;
-	private Mnemonic mnViewMove_moveBottom;
-	private Mnemonic mnViewMove_moveTop;
-	private Mnemonic mnViewMove_moveLeft;
-	private Mnemonic mnViewMove_moveRight;
-	private Mnemonic mnViewMove_jumpBottom;
-	private Mnemonic mnViewMove_jumpTop;
-	private Mnemonic mnViewMove_jumpLeft;
-	private Mnemonic mnViewMove_jumpRight;
+	@SuppressWarnings("unused")
+	private Mnemonic mnLoadImage, mnLoadDotaLabel, mnLoadYoloLabel, mnLoadJson,
+			mnResetViewport, mnZoomIn, mnZoomOut,
+			mnSwitchRightList, mnSwitchBottomBar,
+			mnViewMove_moveBottom, mnViewMove_moveTop, mnViewMove_moveLeft, mnViewMove_moveRight,
+			mnViewMove_jumpBottom, mnViewMove_jumpTop, mnViewMove_jumpLeft, mnViewMove_jumpRight;
 	/**
 	 * 绑定快捷键
 	 * */
@@ -433,15 +457,46 @@ public class MarkerScene implements IScene
 		mnViewMove_jumpRight = addKey(miViewMove_jumpRight, keyMapping.kcViewMove_jumpRight);
 
 	}
+	/**
+	 * 绑定用户操作事件
+	 * */
+	private void bindOperations()
+	{
+		iv.setOnScroll(this::_handleImageViewScroll); // 监听图片缩放事件
+		iv.setOnMouseClicked(this::_handleImageViewClick); // 监听图片点击事件
+	}
+
+	private void checkTaskEqual(Class<? extends ITask> classTask) throws IllegalStateException
+	{
+		var task = taskProperty.get();
+		if(classTask == null) // 当前不能有正在进行的任务
+		{
+			if(task != null)
+				throw new IllegalStateException();
+		}
+		else // 当前必须正在进行某种类型的任务
+		{
+			if(!classTask.isInstance(task))
+				throw new IllegalStateException();
+		}
+	}
+	private void handleInnerEvent(Event param)
+	{
+		if(param instanceof ClickImageEvent event)
+		{
+//			System.out.println("点击图片 " + event.realX + ", " + event.realY + " - " + event.clickCount);
+			// todo
+		}
+	}
 
 	@Getter
 	private final Scene scene;
 	private final BorderPane layout;
-	private final Consumer<Event> bus;
+	private final Consumer<Event> busStage;
 	private final KeyMapping keyMapping = new KeyMapping();
 	public MarkerScene(Consumer<Event> bus)
 	{
-		this.bus = bus;
+		this.busStage = bus;
 
 		layout = new BorderPane();
 		this.scene = new Scene(layout);
@@ -460,7 +515,7 @@ public class MarkerScene implements IScene
 
 		bindProperties();
 		bindKeys();
-
+		bindOperations();
 	}
 
 	private class PolyRegion

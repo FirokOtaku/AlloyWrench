@@ -92,6 +92,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.11.0
+  * update label marker (unfinished)
 * 0.10.0
   * update label marker (unfinished)
 * 0.9.0
