@@ -7,23 +7,36 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.11.0";
+	public static final String version = "0.12.0";
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
+	private static boolean compare(String[] args, int length, String... needs)
+	{
+		if(args == null || args.length < length) return false;
+		for(int step = 0; step < needs.length; step++)
+		{
+			var need = needs[step];
+			if(need == null) continue;
+			if(!args[step].equals(need)) return false;
+		}
+		return true;
+	}
 	public static void main(String[] args)
 	{
-		final var len = args == null ? 0 : args.length;
-
-		if(len == 7 && "convert".equals(args[0]) && "dota".equals(args[1]) && "yolo".equals(args[2]))
+//		final var len = args == null ? 0 : args.length;
+		if(compare(args, 7, "convert", "dota", "yolo"))
 			ConvertDotaYoloTask.execute(args[3], args[4], args[5], args[6]);
 
-		else if(len == 6 && "convert".equals(args[0]) && "labelme".equals(args[1]) && "yolo".equals(args[2]))
+		else if(compare(args, 7, "convert", "dota", "coco"))
+			;
+
+		else if(compare(args, 6, "convert", "labelme", "yolo"))
 			ConvertLabelmeYoloTask.execute(args[3], args[4], args[5]);
 
-		else if(len == 5 && "convert".equals(args[0]) && "labelme".equals(args[1]) && "dota".equals(args[2]))
+		else if(compare(args, 5, "convert", "labelme", "dota"))
 			ConvertLabelmeDotaTask.execute(args[3], args[4]);
 
-		else if(len >= 4 && "collect".equals(args[0]) && "dota".equals(args[1]))
+		else if(compare(args, 4, "collect", "dota"))
 		{
 			var pathMappingFile = args[2];
 			var pathSourceFolders = new String[args.length - 3];
@@ -31,10 +44,12 @@ public class AlloyWrench
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
 
-		else if(len == 5 && "cut".equals(args[0]))
-			CutImageTask.execute(args[1], args[2], args[3], args[4]);
+		else if(compare(args, 6, "cut", "block"))
+			CutImageBlockTask.execute(args[2], args[3], args[4], args[5]);
+		else if(compare(args, 6, "cut", "coco"))
+			CutSingleBigImageByCocoTask.execute(args[2], args[3], args[4], args[5]);
 
-		else if(len == 1 && "renderer".equals(args[0]))
+		else if(compare(args, 1, "renderer"))
 			RendererDotaTask.execute();
 
 //		else if(len == 1 && "marker".equals(args[0]))
@@ -68,12 +83,19 @@ public class AlloyWrench
 				- {yolo-file} 将要创建的 YOLO 标签文件
 				- {mapping-file} 将要创建的映射文件地址
 				
-				* 切分图片和相关的 DOTA 标签
-				> cut {image-file} {label-file} {target-image-folder} {target-label-folder}
+				* 切分图片和相关的 DOTA 标签, 按照固定大小切分
+				> cut block {image-file} {label-file} {target-image-folder} {target-label-folder}
 				- {image-file} 要切分的大图路径
 				- {label-file} 标签数据文件
 				- {target-image-folder} 储存切分后图像的目录
 				- {target-label-folder} 储存切分后标签的目录
+				
+				* 根据 COCO 标签数据切分图片, 只保留每个实例本身
+				> cut coco {image-file} {label-file} {target-image-folder} {target-label-folder}
+				- {image-file-base} 储存要切分的图片的目录
+				- {label-file} 标签数据文件
+				- {target-image-folder} 储存切分后图像的目录
+				- {target-label} 储存切分后标签的文件
 				
 				* 打开标签数据可视化工具
 				> renderer

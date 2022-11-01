@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class CutImageTask
+public class CutImageBlockTask
 {
 	/**
 	 * 是否对图片切片并输出

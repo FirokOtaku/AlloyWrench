@@ -4,6 +4,7 @@ import firok.tool.alloywrench.fx.Event;
 import firok.tool.alloywrench.fx.IScene;
 import firok.topaz.Maths;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,6 +20,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import lombok.Getter;
 
+import java.io.RandomAccessFile;
+import java.util.*;
 import java.util.function.Consumer;
 
 
@@ -42,7 +45,7 @@ public class MarkerScene implements IScene
 		if(old < 20) return;
 		viewportScale.setValue(old - 10);
 	}
-	private final ObjectProperty<? extends ITask> taskProperty = new SimpleObjectProperty<>(null);
+	private final ObjectProperty<ITask> taskProperty = new SimpleObjectProperty<>(null);
 
 	private MenuItem miFile_loadImage, miFile_loadDotaLabel, miFile_loadYoloLabel, miFile_loadJson, miFile_saveJson,
 			miViewMove_moveBottom, miViewMove_moveTop, miViewMove_moveLeft, miViewMove_moveRight,
@@ -466,6 +469,11 @@ public class MarkerScene implements IScene
 		iv.setOnMouseClicked(this::_handleImageViewClick); // 监听图片点击事件
 	}
 
+	private boolean checkTaskNullOrEqual(Class<? extends ITask> classTask)
+	{
+		var task = taskProperty.get();
+		return classTask == null || classTask.isInstance(task);
+	}
 	private void checkTaskEqual(Class<? extends ITask> classTask) throws IllegalStateException
 	{
 		var task = taskProperty.get();
@@ -486,6 +494,31 @@ public class MarkerScene implements IScene
 		{
 //			System.out.println("点击图片 " + event.realX + ", " + event.realY + " - " + event.clickCount);
 			// todo
+			var _t = this.taskProperty.get();
+			if(checkTaskNullOrEqual(CreatePolygonTask.class))
+			{
+				double x = event.realX, y = event.realY;
+				List<Double> points;
+
+				if(_t != null)
+				{
+					var task = (CreatePolygonTask) _t;
+					points = new ArrayList<>(task.polygon.getPoints());
+					midPane.getChildren().remove(task.polygon);
+				}
+				else
+				{
+					points = new ArrayList<>();
+				}
+
+				points.add(x);
+				points.add(y);
+				var polygon = new Polygon();
+				polygon.getPoints().addAll(points);
+				midPane.getChildren().add(polygon);
+				var taskNew = new CreatePolygonTask(polygon);
+				this.taskProperty.set(taskNew);
+			}
 		}
 	}
 

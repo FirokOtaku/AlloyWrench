@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--suppress VulnerableLibrariesLocal, MavenPackageUpdate, MavenModelInspection -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -6,7 +7,7 @@
 
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
-    <version>0.11.0</version>
+    <version>0.12.0</version>
 
     <properties>
         <java.version>17</java.version>
@@ -74,7 +75,7 @@
         <dependency>
             <groupId>firok</groupId>
             <artifactId>topaz</artifactId>
-            <version>3.16.0</version>
+            <version>3.20.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

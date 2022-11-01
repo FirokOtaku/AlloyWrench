@@ -69,11 +69,20 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 # 需要手动修改代码里的 CutImageTask.OVERLYING_X 和 CutImageTask.PIECE_X 等参数
 # 为什么用这种方式 因为懒得从代码接收参数了
 java -jar alloy-wrench-jar-with-dependencies.jar ^
- cut ^
+ cut block ^
  "./raw.png" ^
  "./raw.txt" ^
  "./sub-images" ^
  "./sub-labels"
+
+# 切分图片和相关 COCO 标签数据
+# 会把图片里的每个实例单独切分成一张图片
+java -jar alloy-wrench-jar-with-dependencie ^
+ cut coco ^
+ "./super-big/images/" ^
+ "./super-big.json" ^
+ "./super-big-pieces/" ^
+ "./super-big-pieces.json"
 
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
@@ -92,6 +101,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.12.0
+  * add image cutter tool
 * 0.11.0
   * update label marker (unfinished)
 * 0.10.0
