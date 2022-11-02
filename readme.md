@@ -49,6 +49,12 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./playground/mapping.json" ^
  "./playground/train-labels"
 
+# 将 COCO 数据集转换为 DOTA 格式
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert coco dota ^
+ "./coco-label.json" ^
+ "./coco-2-dota-label/"
+
 # 将 labelme 创建的 JSON 数据文件转换为 YOLO 格式的
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert labelme yolo ^
@@ -101,6 +107,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.13.0
+  * add convert from coco label to dota label
 * 0.12.0
   * add image cutter tool
 * 0.11.0

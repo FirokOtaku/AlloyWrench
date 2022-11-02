@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-public class StringCopyTest
+public class StringTests
 {
 //	@Test
-	public void test()
+	public void testCopy()
 	{
 		var source = new String[10];
 		for(int step = 0; step < 10; step++)
@@ -18,5 +18,14 @@ public class StringCopyTest
 		var target = new String[source.length - 2];
 		System.arraycopy(source, 2, target, 0, target.length);
 		System.out.println(Arrays.toString(target));
+	}
+
+	@Test
+	public void testIndex()
+	{
+		var filename = "abc123.txt";
+		System.out.println(
+				filename.substring(0, filename.lastIndexOf('.'))
+		);
 	}
 }
