@@ -7,7 +7,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.13.0";
+	public static final String version = "0.14.0";
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -46,10 +46,12 @@ public class AlloyWrench
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
 
-		else if(compare(args, 6, "cut", "block"))
-			CutImageBlockTask.execute(args[2], args[3], args[4], args[5]);
+		else if(compare(args, 7, "cut", "block", "dota"))
+			CutImageBlockDotaTask.execute(args[3], args[4], args[5], args[6]);
+		else if(compare(args, 7, "cut", "block", "coco"))
+			CutImageBlockCocoTask.execute(args[3], args[4], args[5], args[6]);
 		else if(compare(args, 6, "cut", "coco"))
-			CutSingleBigImageByCocoTask.execute(args[2], args[3], args[4], args[5]);
+			CutImageBlockByCocoInstanceTask.execute(args[2], args[3], args[4], args[5]);
 
 		else if(compare(args, 1, "renderer"))
 			RendererDotaTask.execute();
@@ -91,11 +93,18 @@ public class AlloyWrench
 				- {mapping-file} 将要创建的映射文件地址
 				
 				* 切分图片和相关的 DOTA 标签, 按照固定大小切分
-				> cut block {image-file} {label-file} {target-image-folder} {target-label-folder}
+				> cut block dota {image-file} {label-file} {target-image-folder} {target-label-folder}
 				- {image-file} 要切分的大图路径
 				- {label-file} 标签数据文件
 				- {target-image-folder} 储存切分后图像的目录
 				- {target-label-folder} 储存切分后标签的目录
+				
+				* 把单一的 COCO 标签图按照矩形范围切割成小图 COCO 数据集
+				> cut block coco {label-file} {image-folder} {target-label-file} {target-image-folder}
+				- {label-file} 要切割的标签文件
+				- {image-folder} 要切割的图片目录
+				- {target-label-file} 目标标签文件
+				- {target-image-folder} 目标图片目录
 				
 				* 根据 COCO 标签数据切分图片, 只保留每个实例本身
 				> cut coco {image-file} {label-file} {target-image-folder} {target-label-folder}

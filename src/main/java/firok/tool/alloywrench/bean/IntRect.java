@@ -1,5 +1,10 @@
 package firok.tool.alloywrench.bean;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.spatial4j.context.jts.JtsSpatialContext;
+
 public record IntRect(int fromX, int fromY, int toX, int toY)
 {
 	/**
@@ -21,4 +26,29 @@ public record IntRect(int fromX, int fromY, int toX, int toY)
 				( (rect.fromX < toX) || (rect.toY > fromY) )
 				);
 	}
+
+	private static final GeometryFactory facGeo = JtsSpatialContext.GEO.getShapeFactory().getGeometryFactory();
+
+	/**
+	 * 转换成几何图形
+	 * */
+	public Geometry toGeometry()
+	{
+		var pts = new Coordinate[5];
+		pts[0] = pts[4] = new Coordinate(fromX, fromY);
+		pts[1] = new Coordinate(toX, fromY);
+		pts[2] = new Coordinate(toX, toY);
+		pts[3] = new Coordinate(fromX, toY);
+		return facGeo.createPolygon(pts);
+	}
+
+//	/**
+//	 * 计算交集图形
+//	 * */
+//	public Geometry intersection(IntRect other)
+//	{
+//		var geoThis = toGeometry();
+//		var geoOther = other.toGeometry();
+//		return geoThis.intersection(geoOther);
+//	}
 }

@@ -3,6 +3,7 @@ package firok.tool.alloywrench.task;
 import firok.tool.alloywrench.bean.*;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
+import firok.tool.alloywrench.util.Images;
 import firok.topaz.MayRunnable;
 import firok.topaz.SimpleMultiThread;
 
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class CutImageBlockTask
+public class CutImageBlockDotaTask
 {
 	/**
 	 * 是否对图片切片并输出
@@ -42,11 +43,6 @@ public class CutImageBlockTask
 	 * 裁剪标签时的计算方式
 	 */
 	public static final int METHOD_CUT_LABEL = USE_ALL_IN_OR_NO;
-
-
-	// 裁剪偏移量
-	private static final int _cutOffsetX = PIECE_X - OVERLYING_X;
-	private static final int _cutOffsetY = PIECE_Y - OVERLYING_Y;
 
 	/**
 	 * @implSpec 这个方法真 tmd 长啊
@@ -174,44 +170,13 @@ public class CutImageBlockTask
 				return;
 			}
 
+
 			System.out.println("计算裁剪范围...");
-			var listRange = new ArrayList<IntRect>();
-			int fromX = 0, toX = PIECE_X;
-			while(true)
-			{
-				final boolean isFinalX = toX >= imageWidth;
-
-				if(imageWidth < toX)
-				{
-					toX = imageWidth;
-					fromX = Math.max(0, imageWidth - PIECE_X);
-				}
-
-				int fromY = 0, toY = PIECE_Y;
-				while(true)
-				{
-					final boolean isFinalY = toY >= imageHeight;
-
-					if(imageHeight < toY)
-					{
-						toY = imageHeight;
-						fromY = Math.max(0, imageHeight - PIECE_Y);
-					}
-
-					var range = new IntRect(fromX, fromY, toX, toY);
-					listRange.add(range);
-
-					if(isFinalY) break;
-
-					fromY += _cutOffsetY;
-					toY = fromY + PIECE_Y;
-				}
-
-				if(isFinalX) break;
-
-				fromX += _cutOffsetX;
-				toX = fromX + PIECE_X;
-			}
+			var listRange = Images.calcCutRanges(
+					imageWidth, imageHeight,
+					PIECE_X, PIECE_Y,
+					OVERLYING_X, OVERLYING_Y
+			);
 
 			System.out.printf("经过及其精密的计算, 我们获得了 %d 个裁剪区域, 下面的时间交给 AWT\n", listRange.size());
 
@@ -238,7 +203,7 @@ public class CutImageBlockTask
 				if(OUTPUT_CUT_IMAGE) processors.add(() ->
 				{
 					System.out.println(rangeName + " : 切片开始");
-					var imageSub = image.getSubimage(rangeCut.fromX(), rangeCut.fromY(), rangeCut.toX() - rangeCut.fromX(), rangeCut.toY() - rangeCut.fromY());
+					var imageSub = Images.cutImage(image, rangeCut);
 
 					try
 					{
@@ -306,4 +271,5 @@ public class CutImageBlockTask
 			System.out.println("切分发生错误: " + any.getMessage());
 		}
 	}
+
 }

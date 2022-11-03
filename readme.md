@@ -75,11 +75,19 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 # 需要手动修改代码里的 CutImageTask.OVERLYING_X 和 CutImageTask.PIECE_X 等参数
 # 为什么用这种方式 因为懒得从代码接收参数了
 java -jar alloy-wrench-jar-with-dependencies.jar ^
- cut block ^
+ cut block dota ^
  "./raw.png" ^
  "./raw.txt" ^
  "./sub-images" ^
  "./sub-labels"
+
+# 把单一的 COCO 标签图按照矩形范围切割成小图 COCO 数据集
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ cut block coco ^
+ "./coco-label.json" ^
+ "./coco-images/" ^
+ "./coco-label-cut.json" ^
+ "./coco-images-cut/"
 
 # 切分图片和相关 COCO 标签数据
 # 会把图片里的每个实例单独切分成一张图片
@@ -104,9 +112,14 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * [DOTA 数据集](https://captain-whu.github.io/DOTA/index.html)
 * [YOLO 框架](https://github.com/ultralytics/yolov5)
 * [labelme 工具](https://github.com/wkentaro/labelme)
+* [MMDetection 框架](https://github.com/open-mmlab/mmdetection)
+* [MMDetection 框架官网](https://mmdetection.readthedocs.io/zh_CN/latest/)
+* [JTS 库](https://github.com/locationtech/jts)
 
 ## changelog
 
+* 0.14.0
+  * add image cutter tool (cut by coco format dataset)
 * 0.13.0
   * add convert from coco label to dota label
 * 0.12.0

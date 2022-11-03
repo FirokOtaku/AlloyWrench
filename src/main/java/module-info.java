@@ -9,7 +9,10 @@ open module firok.tool.alloywrench {
 	requires transitive java.desktop;
 	requires transitive firok.topaz;
 
+	requires org.locationtech.jts;
+
 	requires lombok;
+	requires spatial4j;
 
 //	opens firok.tool.alloywrench to javafx.controls;
 //	opens firok.tool.alloywrench;

@@ -1,8 +1,6 @@
 package firok.tool.alloywrench.task;
 
-import com.fasterxml.jackson.annotation.JsonKey;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,8 +24,10 @@ import java.util.stream.IntStream;
 /**
  * 切分单个大图片
  * */
-public class CutSingleBigImageByCocoTask
+public class CutImageBlockByCocoInstanceTask
 {
+	public static final int OVER_X = 50, OVER_Y = 50;
+
 	final static class AnnotationRecord
 	{
 		@JsonProperty("id")
@@ -185,6 +185,7 @@ public class CutSingleBigImageByCocoTask
 
 			smtInit.start();
 			smtInit.waitEnd();
+			smtInit.throwAnyException();
 
 			var arrImageNew = om.createArrayNode();
 			var arrAnnoNew = om.createArrayNode();
