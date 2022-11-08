@@ -36,6 +36,9 @@ public abstract class FxBase extends Application
 	protected static final FileChooser.ExtensionFilter TEXTS
 			= new FileChooser.ExtensionFilter("Text files", "*.txt");
 
+	protected static final FileChooser.ExtensionFilter JSONS
+			= new FileChooser.ExtensionFilter("JSON Files", "*.json");
+
 	protected final File showFileChooser(String title, FileChooser.ExtensionFilter... filters) throws MalformedURLException
 	{
 		var fc = new FileChooser();

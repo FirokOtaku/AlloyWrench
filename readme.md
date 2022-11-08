@@ -118,6 +118,11 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.15.0
+  * add a [python script](/src/main/python/convert_result.py) to convert results of mmdetection
+    and get coordinates from it
+  * now renderer tool could read json data converted
+    from script mentioned above
 * 0.14.0
   * add image cutter tool (cut by coco format dataset)
 * 0.13.0

@@ -1,7 +1,9 @@
 package firok.tool.alloywrench.task;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import firok.tool.alloywrench.bean.DecimalPoint;
 import firok.tool.alloywrench.bean.DotaLabel;
+import firok.tool.alloywrench.bean.ScriptJsonData;
 import firok.tool.alloywrench.bean.YoloLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
@@ -16,16 +18,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,20 @@ public class RendererDotaTask extends FxBase
 	Scene scene;
 	Canvas canvas;
 	List<BoxEntry> listBox = new ArrayList<>();
-	record BoxEntry(Polygon poly, Text text, Shape[] points, Object label, DecimalPoint min, DecimalPoint max) { }
+	record BoxEntry(Shape poly, Text text, Shape[] points, Object label, DecimalPoint min, DecimalPoint max) { }
+	private void clearBoxEntries()
+	{
+		var children = pane.getChildren();
+
+		for(var box : listBox)
+		{
+			children.remove(box.poly);
+			children.remove(box.text);
+			children.removeAll(box.points);
+		}
+
+		listBox.clear();
+	}
 
 	double preX = 0, preY = 0;
 	int offsetX = 0, offsetY = 0;
@@ -70,16 +83,20 @@ public class RendererDotaTask extends FxBase
 			box.poly.setLayoutX(offsetX);
 			box.poly.setLayoutY(offsetY);
 
-			var points = box.poly.getPoints();
-			var sx = points.get(0);
-			var sy = points.get(1);
-			for(int step = 0; step < 4; step++)
+			if(box.poly instanceof Polygon poly)
 			{
-				var px = points.get(step * 2);
-				var py = points.get(step * 2 + 1);
-				var point = box.points[step];
-				point.setLayoutX(px + offsetX);
-				point.setLayoutY(py + offsetY);
+				var points = poly.getPoints();
+//			    var sx = points.get(0);
+//			    var sy = points.get(1);
+				final int size = points.size();
+				for(int step = 0; step < size && step < box.points.length; step++)
+				{
+					var px = points.get(step * 2);
+					var py = points.get(step * 2 + 1);
+					var point = box.points[step];
+					point.setLayoutX(px + offsetX);
+					point.setLayoutY(py + offsetY);
+				}
 			}
 		}
 	}
@@ -176,15 +193,7 @@ public class RendererDotaTask extends FxBase
 	void loadDotaLabels(File file) throws IOException
 	{
 		var children = pane.getChildren();
-
-		for(var box : listBox)
-		{
-			children.remove(box.poly);
-			children.remove(box.text);
-			children.removeAll(box.points);
-		}
-
-		listBox.clear();
+		clearBoxEntries();
 
 		var raw = Files.read(file);
 		var listLabel = DotaReader.read(raw, 0, 0);
@@ -239,6 +248,113 @@ public class RendererDotaTask extends FxBase
 			var file = showFileChooser("Select text", TEXTS, ALL);
 			if(file == null) return;
 			loadDotaLabels(file);
+		}
+		catch (Exception any)
+		{
+			showError(any);
+		}
+	}
+	void loadScriptJson(File file) throws IOException
+	{
+		var children = pane.getChildren();
+		clearBoxEntries();
+
+		var om = new ObjectMapper();
+		var sjd = om.readValue(file, ScriptJsonData.class);
+
+		final int countEntry = sjd.countEntry();
+		final var labels = sjd.getLabels();
+		final var bboxes = sjd.getBboxes();
+		final var polygons = sjd.getPolygons();
+		final var masks = sjd.getMasks();
+		for(var step = 0; step < countEntry; step++)
+		{
+			var label = labels[step];
+//			var bbox = bboxes[step];
+//			var polygon = polygons[step];
+			var sizePart = masks[step].length;
+
+			double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
+			double maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
+
+			var path = new Path();
+			path.setFillRule(FillRule.EVEN_ODD);
+			path.setFill(Color.TRANSPARENT);
+			path.setStroke(Color.GREEN);
+			path.setStrokeWidth(1.5);
+			path.setStrokeType(StrokeType.OUTSIDE);
+			var partElements = path.getElements();
+
+			var text = new Text(String.valueOf(label));
+			text.setStroke(Color.BLUE);
+
+			for(int stepPart = 0; stepPart < sizePart; stepPart++)
+			{
+				var part = masks[step][stepPart]; // 取出当前实例的第 stepPart 个实例
+
+
+				var sizePt = part.length;
+				for(var stepPt = 0; stepPt < sizePt; stepPt++)
+				{
+					var pt = part[stepPt];
+//					pts[stepPt * 2] = pt[0];
+//					pts[stepPt * 2 + 1] = pt[1];
+					if(stepPt == 0)
+					{
+						var moveTo = new MoveTo(pt[0], pt[1]);
+						moveTo.setAbsolute(true);
+						partElements.add(moveTo);
+					}
+					else
+					{
+						var lineTo = new LineTo(pt[0], pt[1]);
+						lineTo.setAbsolute(true);
+						partElements.add(lineTo);
+					}
+
+					if(stepPart == 0)
+					{
+						minX = Math.min(minX, pt[0]);
+						minY = Math.min(minY, pt[1]);
+						maxX = Math.max(maxX, pt[0]);
+						maxY = Math.max(maxY, pt[1]);
+					}
+				}
+
+				if(stepPart == 0)
+				{
+					text.setLayoutX( sizePt > 0 ? masks[step][0][0][0] : 0);
+					text.setLayoutX( sizePt > 0 ? masks[step][0][0][1] : 0);
+				}
+			}
+
+			var points = new Shape[0];
+			var min = new DecimalPoint(new BigDecimal(minX), new BigDecimal(minY));
+			var max = new DecimalPoint(new BigDecimal(maxX), new BigDecimal(maxY));
+
+			children.add(path);
+			children.add(text);
+
+
+			var entry = new BoxEntry(
+					path,
+					text,
+					points,
+					null,
+					min,
+					max
+			);
+			listBox.add(entry);
+		}
+
+	}
+	void clickLoadScriptJson()
+	{
+		try
+		{
+			var file = showFileChooser("Select JSON", JSONS, ALL);
+			if(file == null) return;
+			loadScriptJson(file);
 		}
 		catch (Exception any)
 		{
@@ -313,6 +429,7 @@ public class RendererDotaTask extends FxBase
 				[P] - Load image
 				[1] - Load DOTA labels
 				[2] - Load YOLO labels
+				[3] - Load script JSON data
 				[L] - Switch labeled boxes display
 				[U] - Switch UI display
 				[R] - Reset image offset
@@ -322,7 +439,7 @@ public class RendererDotaTask extends FxBase
 		textKeymap.setLayoutY(15);
 		textOffset = new Text("0, 0");
 		textOffset.setLayoutX(0);
-		textOffset.setLayoutY(130);
+		textOffset.setLayoutY(140);
 		textUIStatus = new Text(genUIStatus());
 		textUIStatus.setLayoutX(220);
 		textUIStatus.setLayoutY(15);
@@ -356,6 +473,7 @@ public class RendererDotaTask extends FxBase
 				case 'p' -> clickLoadImage();
 				case '1' -> clickLoadDotaLabels();
 				case '2' -> clickLoadYoloLabels();
+				case '3' -> clickLoadScriptJson();
 				case 'l' -> clickSwitchLabeledBoxesDisplay();
 				case 'u' -> clickSwitchUIDisplay();
 				case 'r' -> clickResetImageOffset();
