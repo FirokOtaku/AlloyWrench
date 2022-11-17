@@ -7,7 +7,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.15.0";
+	public static final String version = "0.16.0";
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -46,6 +46,8 @@ public class AlloyWrench
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
 
+		else if(compare(args, 7, "cut", "block", "direct"))
+			CutImageDirectTask.execute(args[3], args[4], args[5], args[6], args[7], args[8]);
 		else if(compare(args, 7, "cut", "block", "dota"))
 			CutImageBlockDotaTask.execute(args[3], args[4], args[5], args[6]);
 		else if(compare(args, 7, "cut", "block", "coco"))
@@ -91,6 +93,15 @@ public class AlloyWrench
 				- {labelme-file} labelme JSON 文件
 				- {yolo-file} 将要创建的 YOLO 标签文件
 				- {mapping-file} 将要创建的映射文件地址
+				
+				* 直接根据参数按照矩形切割图片
+				> cut block direct {image-file} {output-folder} {cut-width} {cut-height} {overlying-width} {overlying-height}
+				* {image-file} 要切割的图片文件
+				* {output-folder} 输出目录
+				* {cut-width} 切片宽度
+				* {cut-height} 切片高度
+				* {overlying-width} 切片间叠盖宽度
+				* {overlying-height} 切片间叠高高度
 				
 				* 切分图片和相关的 DOTA 标签, 按照固定大小切分
 				> cut block dota {image-file} {label-file} {target-image-folder} {target-label-folder}

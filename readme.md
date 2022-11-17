@@ -14,7 +14,7 @@
 > 能用就行, 哪来那么多毛病
 > 
 > _图标?_  
-> 原图为 [工业时代 - 扳手](https://wiki.industrial-craft.net/index.php?title=Wrench) 的材质
+> 原图为 [工业时代 - 扳手](https://wiki.industrial-craft.net/index.php?title=Wrench) 的材质 <sub>吱嘎吱嘎吱嘎 🔈</sub>
 
 ## 用法
 
@@ -118,6 +118,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.16.0
+  * add image cutter tool (cut into rectangle shape directly)
 * 0.15.0
   * add a [python script](/src/main/python/convert_result.py) to convert results of mmdetection
     and get coordinates from it
