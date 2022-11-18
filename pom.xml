@@ -7,12 +7,15 @@
 
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
-    <version>0.17.0</version>
+    <version>0.18.0</version>
 
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
     <repositories>

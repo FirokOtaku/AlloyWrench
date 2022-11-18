@@ -8,7 +8,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 17, 0);
+	public static final Version version = new Version(0, 18, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -49,6 +49,9 @@ public class AlloyWrench
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
 
+		else if(compare(args, 5, "merge", "coco"))
+			MergeCocoTask.execute(args[2], args[3], args[4]);
+
 		else if(compare(args, 7, "cut", "block", "direct"))
 			CutImageDirectTask.execute(args[3], args[4], args[5], args[6], args[7], args[8]);
 		else if(compare(args, 7, "cut", "block", "dota"))
@@ -72,7 +75,7 @@ public class AlloyWrench
 	{
 		System.out.printf("""
 				%s %s by %s depends on %s %s
-				view on GitHub: %s
+				Open source under MIT license. View on GitHub: %s
                 
 				* 收集 DOTA 数据集中的目标类型
 				> collect dota {mapping-file} {source-folder} [{source-folder}...]
@@ -131,6 +134,12 @@ public class AlloyWrench
 				- {label-file} 标签数据文件
 				- {target-image-folder} 储存切分后图像的目录
 				- {target-label} 储存切分后标签的文件
+				
+				* 合并两个 COCO 标签文件
+				> merge coco {label1-file} {label2-file} {label-output}
+				- {label1-file} 文件1
+				- {label2-file} 文件2
+				- {label-output} 目标输出文件
 				
 				* 打开标签数据可视化工具
 				> renderer

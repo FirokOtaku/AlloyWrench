@@ -20,6 +20,9 @@
 
 ```bash
 # 神说 要有 jar
+# 出于未知且知道也懒得修复的问题 现在打包出来的玩意不能用
+# 反正在 IDE 里直接用也不是不能用
+# 建议你也装一套开发环境
 mvn package
 
 # 帮助信息
@@ -112,6 +115,13 @@ java -jar alloy-wrench-jar-with-dependencie.jar ^
  "./super-big-pieces/" ^
  "./super-big-pieces.json"
 
+# 合并两个 COCO 标签文件
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ merge coco ^
+ "./coco-label-1.json" ^
+ "./coco-label-2.json" ^
+ "./coco-label-output.json"
+
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  renderer dota
@@ -132,6 +142,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.18.0
+  * add tool for merging two coco label files
 * 0.17.0
   * add convert from labelme label to coco label
 * 0.16.0

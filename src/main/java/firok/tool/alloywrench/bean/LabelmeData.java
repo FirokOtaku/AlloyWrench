@@ -11,13 +11,10 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LabelmeData
 {
-	@JsonProperty("image_path")
 	String imagePath;
 
-	@JsonProperty("image_width")
 	int imageWidth;
 
-	@JsonProperty("image_height")
 	int imageHeight;
 
 	List<Shape> shapes;
