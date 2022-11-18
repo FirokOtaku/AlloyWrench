@@ -2,12 +2,13 @@ package firok.tool.alloywrench;
 
 import firok.tool.alloywrench.task.*;
 import firok.topaz.Topaz;
+import firok.topaz.Version;
 
 public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final String version = "0.16.0";
+	public static final Version version = new Version(0, 17, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -28,13 +29,15 @@ public class AlloyWrench
 			ConvertDotaYoloTask.execute(args[3], args[4], args[5], args[6]);
 
 		else if(compare(args, 7, "convert", "dota", "coco"))
-			;
+			System.out.println("not implemented"); // todo low
+
 		else if(compare(args, 5, "convert", "coco", "dota"))
 			ConvertCocoDotaTask.execute(args[3], args[4]);
 
+		else if(compare(args, 5, "convert", "labelme", "coco"))
+			ConvertLabelmeCocoTask.execute(args[3], args[4]);
 		else if(compare(args, 6, "convert", "labelme", "yolo"))
 			ConvertLabelmeYoloTask.execute(args[3], args[4], args[5]);
-
 		else if(compare(args, 5, "convert", "labelme", "dota"))
 			ConvertLabelmeDotaTask.execute(args[3], args[4]);
 
@@ -82,6 +85,11 @@ public class AlloyWrench
 				- {image-folder} 图片目录
 				- {mapping-file} 将要创建的 CLASS ID 映射文件
 				- {target-folder} 将要创建的目标目录
+				
+				# 将 labelme 创建的 JSON 数据文件转换为 COCO 格式的
+				> convert labelme coco {label-input} {label-output}
+				- {label-input} labelme 标签文件
+				- {label-output} 目标 COCO 标签文件
 				
 				* 将 COCO 数据集转换为 DOTA 格式
 				> convert coco dota {label-file} {target-label-folder}

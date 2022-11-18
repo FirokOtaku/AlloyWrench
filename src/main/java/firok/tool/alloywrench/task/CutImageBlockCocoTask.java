@@ -35,7 +35,7 @@ public class CutImageBlockCocoTask
 	/**
 	 * 裁剪出标签图形点之间的最小距离
 	 * */
-	public static final int LIMIT_DISTANCE_COOR = 10;
+	public static final int LIMIT_DISTANCE_COOR = 2;
 
 	public static final boolean CHECK_FS = false;
 	public static final boolean SHOULD_READ_IMAGE = false;
@@ -232,7 +232,7 @@ public class CutImageBlockCocoTask
 						var intersectionGeo = cutGeo.intersection(labelGeo);
 						if(intersectionGeo.isEmpty()) // 不相交 下一个
 							continue LOOP_LABEL;
-						if(intersectionGeo.getArea() < 16) // 太小了 忽略
+						if(intersectionGeo.getArea() < LIMIT_AREA_ANNOTATION) // 太小了 忽略
 							continue LOOP_LABEL;
 						CHECK_LINE: {
 							var coors = intersectionGeo.getCoordinates();
@@ -240,7 +240,7 @@ public class CutImageBlockCocoTask
 							for(int step = 1; step < coors.length; step++)
 							{
 								var coorNow = coors[step];
-								if(coorNow.distance(coor) < 2) // 两个点离得太近 忽略
+								if(coorNow.distance(coor) < LIMIT_DISTANCE_COOR) // 两个点离得太近 忽略
 									continue LOOP_LABEL;
 								coor = coorNow;
 							}

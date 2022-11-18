@@ -23,6 +23,7 @@
 mvn package
 
 # 帮助信息
+# 建议有问题之前先看看这个 应该够详细了
 java -jar alloy-wrench-jar-with-dependencies.jar
 
 # 收集 DOTA 数据标签文件里面的标签目标类型
@@ -55,6 +56,12 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./coco-label.json" ^
  "./coco-2-dota-label/"
 
+# 将 labelme 创建的 JSON 数据文件转换为 COCO 格式的
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert labelme coco ^
+ "./labelme-labels.json" ^
+ "./output-coco-labels.json"
+
 # 将 labelme 创建的 JSON 数据文件转换为 YOLO 格式的
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert labelme yolo ^
@@ -67,6 +74,13 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert labelme dota ^
  "./labelme-labels.json" ^
  "./dota-labels.txt"
+
+# 直接以矩形切割图片
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ cut block direct ^
+ "./input-image.png" ^
+ "./output-images/" ^
+ 1600 1600 0 0
 
 # 切分图片和相关 DOTA 标签数据
 # 如果只希望输出切片图片或切片标签
@@ -91,8 +105,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 # 切分图片和相关 COCO 标签数据
 # 会把图片里的每个实例单独切分成一张图片
-java -jar alloy-wrench-jar-with-dependencie ^
- cut coco ^
+java -jar alloy-wrench-jar-with-dependencie.jar ^
+ cut block coco ^
  "./super-big/images/" ^
  "./super-big.json" ^
  "./super-big-pieces/" ^
@@ -118,6 +132,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.17.0
+  * add convert from labelme label to coco label
 * 0.16.0
   * add image cutter tool (cut into rectangle shape directly)
 * 0.15.0
@@ -168,5 +184,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * DOTA 集里有些打点在图片外, 非常真实
 * DOTA 集的标签文件换行符是 `/r/n` 哟
 * 突然发现 JavaFX 当 Swing 写也可以嘛
-* native-image + JavaFX + --no-fallback = BOOM
-* native-image + Swing + --no-fallback = BOOM
+* native-image + JavaFX + `--no-fallback` = **BOOM**
+* native-image + Swing + `--no-fallback` = **BOOM**
+* 要是某些项目的文档全一点, 这里的轮子至少少一半
+* 自己写的 [库](https://github.com/FirokOtaku/Topaz) 肯定是要狠狠地用; 建议你们也用
+* 这玩意真的有别的人会用吗? 也许吧

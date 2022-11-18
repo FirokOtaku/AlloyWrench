@@ -23,6 +23,13 @@ public final class DecimalPoint
 		this.x = new BigDecimal(x);
 		this.y = new BigDecimal(y);
 	}
+	public DecimalPoint(BigDecimal[] pts)
+	{
+		if(pts == null || pts.length != 2)
+			throw new IllegalArgumentException();
+		this.x = Objects.requireNonNull(pts[0]);
+		this.y = Objects.requireNonNull(pts[1]);
+	}
 
 	/**
 	 * 因为这个类不是 record, 所以返回的一个新的实例

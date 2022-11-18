@@ -264,8 +264,8 @@ public class RendererDotaTask extends FxBase
 
 		final int countEntry = sjd.countEntry();
 		final var labels = sjd.getLabels();
-		final var bboxes = sjd.getBboxes();
-		final var polygons = sjd.getPolygons();
+//		final var bboxes = sjd.getBboxes();
+//		final var polygons = sjd.getPolygons();
 		final var masks = sjd.getMasks();
 		for(var step = 0; step < countEntry; step++)
 		{
@@ -291,7 +291,6 @@ public class RendererDotaTask extends FxBase
 			for(int stepPart = 0; stepPart < sizePart; stepPart++)
 			{
 				var part = masks[step][stepPart]; // 取出当前实例的第 stepPart 个实例
-
 
 				var sizePt = part.length;
 				for(var stepPt = 0; stepPt < sizePt; stepPt++)
@@ -334,7 +333,6 @@ public class RendererDotaTask extends FxBase
 
 			children.add(path);
 			children.add(text);
-
 
 			var entry = new BoxEntry(
 					path,
