@@ -26,7 +26,8 @@
 mvn package
 
 # 帮助信息
-# 建议有问题之前先看看这个 应该够详细了
+# 下面所有的例子都是以前写的 参数列表的顺序可能发生过变化
+# 建议有问题之前先不带参数直接执行一下 打印出来的帮助信息应该够详细了
 java -jar alloy-wrench-jar-with-dependencies.jar
 
 # 收集 DOTA 数据标签文件里面的标签目标类型
@@ -122,6 +123,14 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./coco-label-2.json" ^
  "./coco-label-output.json"
 
+# 过滤 COCO 标签文件的内容
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ filter coco ^
+ "./coco-label-input.json" "./coco-label-output.json" ^
+ --filter-anno-id 1 2 3 ^
+ --filter-image-id 1 2 3 ^
+ --filter-category-id 1 2 3
+
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  renderer dota
@@ -142,6 +151,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.19.0
+  * add tool for filtering coco label content
 * 0.18.0
   * add tool for merging two coco label files
 * 0.17.0

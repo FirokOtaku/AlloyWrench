@@ -4,11 +4,13 @@ import firok.tool.alloywrench.task.*;
 import firok.topaz.Topaz;
 import firok.topaz.Version;
 
+import java.util.*;
+
 public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 18, 0);
+	public static final Version version = new Version(0, 19, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -60,6 +62,43 @@ public class AlloyWrench
 			CutImageBlockCocoTask.execute(args[3], args[4], args[5], args[6]);
 		else if(compare(args, 6, "cut", "coco"))
 			CutImageBlockByCocoInstanceTask.execute(args[2], args[3], args[4], args[5]);
+
+		else if(args.length > 4 && "filter".equals(args[0]) && "coco".equals(args[1]))
+		{
+			enum ModeStream { Unset, AnnoId, ImageId, CategoryId }
+			var ms = ModeStream.Unset;
+			var pathInputLabel = args[2];
+			var pathOutputLabel = args[3];
+			var setAnnoId = new HashSet<Integer>();
+			var setImageId = new HashSet<Integer>();
+			var setCategoryId = new HashSet<Integer>();
+			for(var step = 4; step < args.length; step++)
+			{
+				var word = args[step];
+
+				switch(word)
+				{
+					case "--filter-anno-id" -> ms = ModeStream.AnnoId;
+					case "--filter-image-id" -> ms = ModeStream.ImageId;
+					case "--filter-category-id" -> ms = ModeStream.CategoryId;
+					default -> (switch (ms)
+					{
+						case AnnoId -> setAnnoId;
+						case ImageId -> setImageId;
+						case CategoryId -> setCategoryId;
+						case Unset -> throw new IllegalStateException("未指定过滤集");
+					}).add(Integer.valueOf(word));
+				}
+			}
+
+			FilterCocoTask.execute(
+					pathInputLabel,
+					pathOutputLabel,
+					setImageId,
+					setCategoryId,
+					setAnnoId
+			);
+		}
 
 		else if(compare(args, 1, "renderer"))
 			RendererDotaTask.execute();
@@ -140,6 +179,17 @@ public class AlloyWrench
 				- {label1-file} 文件1
 				- {label2-file} 文件2
 				- {label-output} 目标输出文件
+				
+				* 过滤 COCO 标签文件的内容
+				> filter coco {input-label-file} {output-label-file}
+				    [--filter-anno-id <anno-id> [, <anno-id> ...]]
+				    [--filter-image-id <image-id> [, <image-id> ...]]
+				    [--filter-category-id <category-id> [, <category-id> ...]]
+				- {input-label-file} 源标签文件
+				- {output-label-file} 目标输出标签文件
+				- [filter-anno-id <anno-id>] 标签 ID 过滤器. 黑名单策略, 指定 ID 的标签将不会出现在结果
+				- [filter-image-id <image-id>] 图片 ID 过滤器. 黑名单策略, 指定 ID 的图片将不会出现在结果
+				- [filter-category-id <category-id>] 种类 ID 过滤器. 黑名单策略, 指定 ID 的类型将不会出现在结果
 				
 				* 打开标签数据可视化工具
 				> renderer
