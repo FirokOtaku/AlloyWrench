@@ -28,7 +28,8 @@ public class FilterCocoTask
 			Files.assertExist(fileCoco, true, "标签文件必须存在");
 			Files.assertNoExist(fileCocoOut, "目标标签文件已经存在");
 			if(isEmpty(setImageIdFilter) && isEmpty(setCategoryIdFilter) && isEmpty(setAnnotationIdFilter))
-				throw new IllegalArgumentException("过滤器全部为空 你再考虑一下");
+//				throw new IllegalArgumentException("过滤器全部为空 你再考虑一下");
+				System.out.println("过滤器全部为空 我暂且蒙鼓");
 
 			var old = om.readValue(fileCoco, CocoData.class);
 			var images = new ArrayList<CocoData.Image>();

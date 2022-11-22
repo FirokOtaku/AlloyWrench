@@ -68,6 +68,16 @@ public final class DecimalPoint
 		}
 	}
 
+	/* === 下面俩方法是用来做比较起始变量的 === */
+	public static DecimalPoint startMin()
+	{
+		return new DecimalPoint(_min, _min);
+	}
+	public static DecimalPoint startMax()
+	{
+		return new DecimalPoint(_max, _max);
+	}
+
 	/**
 	 * 根据给定点 创建一个矩形
 	 * */

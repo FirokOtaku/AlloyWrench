@@ -22,10 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * */
 public class CutImageBlockCocoTask
 {
-	public static final int PIECE_X = 600;
-	public static final int PIECE_Y = 600;
-	public static final int OVERLYING_X = 100;
-	public static final int OVERLYING_Y = 100;
+	public static final int PIECE_X = 800;
+	public static final int PIECE_Y = 800;
+	public static final int OVERLYING_X = 150;
+	public static final int OVERLYING_Y = 150;
 
 	/**
 	 * 裁剪出标签的最小面积
@@ -38,8 +38,8 @@ public class CutImageBlockCocoTask
 	public static final int LIMIT_DISTANCE_COOR = 2;
 
 	public static final boolean CHECK_FS = false;
-	public static final boolean SHOULD_READ_IMAGE = false;
-	public static final boolean SHOULD_WRITE_SUB_IMAGE = false;
+	public static final boolean SHOULD_READ_IMAGE = true;
+	public static final boolean SHOULD_WRITE_SUB_IMAGE = true;
 
 	public static void execute(
 			String pathLabel,
@@ -61,6 +61,7 @@ public class CutImageBlockCocoTask
 				Files.assertNoExist(fileLabelTarget, "目标标签已经存在");
 				Files.assertNoExist(folderImageTarget, "目标图片目录已经存在");
 			}
+			folderImageTarget.mkdirs();
 //
 //			folderImageTarget.mkdirs();
 //
@@ -127,6 +128,9 @@ public class CutImageBlockCocoTask
 							var fileImage = new File(folderImage, filename);
 							System.out.println("加载图片: " + filename);
 
+							if(!fileImage.exists())
+								throw new RuntimeException("找不到图片文件: " + filename);
+
 							BufferedImage image;
 							if(SHOULD_READ_IMAGE)
 							{
@@ -148,9 +152,6 @@ public class CutImageBlockCocoTask
 							{
 								mapImageOrigin.put(img.getId(), image);
 							}
-
-							if(!fileImage.exists())
-								throw new RuntimeException("找不到图片文件: " + filename);
 						});
 						System.out.println("完成所有图片加载");
 					}

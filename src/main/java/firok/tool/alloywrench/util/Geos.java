@@ -61,7 +61,8 @@ public class Geos
 	public static Geometry move(Geometry origin, double offsetX, double offsetY)
 	{
 		var ptsOrigin = origin.getCoordinates();
-		var ptsNew = new Coordinate[ptsOrigin.length];
+		var isClosed = ptsOrigin[ptsOrigin.length - 1].equals(ptsOrigin[0]);
+		var ptsNew = new Coordinate[ptsOrigin.length + (isClosed ? 0 : 1)];
 		for(var step = 0; step < ptsOrigin.length; step++)
 		{
 			var ptOrigin = ptsOrigin[step];
@@ -69,6 +70,10 @@ public class Geos
 					ptOrigin.x + offsetX,
 					ptOrigin.y + offsetY
 			);
+		}
+		if(!isClosed)
+		{
+			ptsNew[ptsNew.length - 1] = ptsNew[0];
 		}
 		return facGeo.createPolygon(ptsNew);
 	}

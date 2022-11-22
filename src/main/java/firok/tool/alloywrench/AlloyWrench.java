@@ -10,7 +10,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 19, 0);
+	public static final Version version = new Version(0, 20, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -43,6 +43,18 @@ public class AlloyWrench
 		else if(compare(args, 5, "convert", "labelme", "dota"))
 			ConvertLabelmeDotaTask.execute(args[3], args[4]);
 
+		else if(compare(args, 10, "convert", "geojson", "coco"))
+		{
+			// 我知道自己在干啥.jpg
+			//noinspection deprecation
+			ConvertMultiPolygonGeojsonCocoTask.execute(
+					args[3],
+					args[4],
+					args[5],
+					new String[]{args[6], args[7], args[8], args[9]}
+			);
+		}
+
 		else if(compare(args, 4, "collect", "dota"))
 		{
 			var pathMappingFile = args[2];
@@ -63,7 +75,7 @@ public class AlloyWrench
 		else if(compare(args, 6, "cut", "coco"))
 			CutImageBlockByCocoInstanceTask.execute(args[2], args[3], args[4], args[5]);
 
-		else if(args.length > 4 && "filter".equals(args[0]) && "coco".equals(args[1]))
+		else if(args.length >= 4 && "filter".equals(args[0]) && "coco".equals(args[1]))
 		{
 			enum ModeStream { Unset, AnnoId, ImageId, CategoryId }
 			var ms = ModeStream.Unset;
