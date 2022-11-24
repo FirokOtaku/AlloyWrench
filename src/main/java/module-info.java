@@ -8,6 +8,7 @@ open module firok.tool.alloywrench {
 	requires transitive com.fasterxml.jackson.annotation;
 	requires transitive java.desktop;
 	requires transitive firok.topaz;
+	requires jdk.httpserver;
 
 	requires org.locationtech.jts;
 

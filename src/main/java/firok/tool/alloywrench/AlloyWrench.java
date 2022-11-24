@@ -1,5 +1,6 @@
 package firok.tool.alloywrench;
 
+import firok.tool.alloywrench.http.ConvertScriptJsonGeojsonServer;
 import firok.tool.alloywrench.task.*;
 import firok.topaz.Topaz;
 import firok.topaz.Version;
@@ -10,7 +11,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 20, 0);
+	public static final Version version = new Version(0, 21, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -110,6 +111,21 @@ public class AlloyWrench
 					setCategoryId,
 					setAnnoId
 			);
+		}
+
+		else if(compare(args, 2, "server"))
+		{
+			try
+			{
+				int port = Integer.parseInt(args[1]);
+				//noinspection resource,deprecation
+				new ConvertScriptJsonGeojsonServer(port);
+				System.out.println("服务器启动");
+			}
+			catch (Exception any)
+			{
+				System.out.println("服务器启动失败");
+			}
 		}
 
 		else if(compare(args, 1, "renderer"))

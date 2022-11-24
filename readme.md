@@ -151,6 +151,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.21.0
+  * add http server for converting script json to geojson (internal usage)
 * 0.20.0
   * add convert from geojson to coco label (internal usage)
   * filtering coco label tool now can be used for remove unused images from label file
