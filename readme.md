@@ -123,6 +123,14 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./coco-label-2.json" ^
  "./coco-label-output.json"
 
+# 合并 COCO 标签文件中的种类
+# 比如把 "板房" "砖房" 统一合并成 "房屋"
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ merge coco category
+ "./label-input.json" ^
+ "./label-output.json" ^
+ "./mapping.json"
+
 # 过滤 COCO 标签文件的内容
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  filter coco ^
@@ -151,6 +159,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.22.0
+  * add tool for merging categories in coco label
 * 0.21.0
   * add http server for converting script json to geojson (internal usage)
 * 0.20.0

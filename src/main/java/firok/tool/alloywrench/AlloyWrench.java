@@ -11,7 +11,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 21, 0);
+	public static final Version version = new Version(0, 22, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -75,6 +75,13 @@ public class AlloyWrench
 			CutImageBlockCocoTask.execute(args[3], args[4], args[5], args[6]);
 		else if(compare(args, 6, "cut", "coco"))
 			CutImageBlockByCocoInstanceTask.execute(args[2], args[3], args[4], args[5]);
+
+//		else if(compare(args, 5, "clean", "dataset", "coco"))
+//		{
+//			CleanDatasetCoco.execute(args[3], args[4]);
+//		}
+		else if(compare(args, 6, "merge", "coco", "category"))
+			MergeCocoCategoryTask.execute(args[3], args[4], args[5]);
 
 		else if(args.length >= 4 && "filter".equals(args[0]) && "coco".equals(args[1]))
 		{
@@ -207,6 +214,12 @@ public class AlloyWrench
 				- {label1-file} 文件1
 				- {label2-file} 文件2
 				- {label-output} 目标输出文件
+				
+				* 合并 COCO 标签文件中的种类
+				> merge coco category {label-input} {label-output} {mapping-file}
+				* {label-input} 标签输入
+				* {label-outpu} 标签输出
+				* {mapping-file} JSON 格式映射数据
 				
 				* 过滤 COCO 标签文件的内容
 				> filter coco {input-label-file} {output-label-file}
