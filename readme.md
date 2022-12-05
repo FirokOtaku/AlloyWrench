@@ -105,7 +105,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./coco-label.json" ^
  "./coco-images/" ^
  "./coco-label-cut.json" ^
- "./coco-images-cut/"
+ "./coco-images-cut/" ^
+ "coco-image-cut-"
 
 # 切分图片和相关 COCO 标签数据
 # 会把图片里的每个实例单独切分成一张图片
@@ -118,10 +119,10 @@ java -jar alloy-wrench-jar-with-dependencie.jar ^
 
 # 合并两个 COCO 标签文件
 java -jar alloy-wrench-jar-with-dependencies.jar ^
- merge coco ^
+ merge coco multi ^
+ "./coco-label-output.json"
  "./coco-label-1.json" ^
  "./coco-label-2.json" ^
- "./coco-label-output.json"
 
 # 合并 COCO 标签文件中的种类
 # 比如把 "板房" "砖房" 统一合并成 "房屋"
@@ -159,6 +160,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.23.0
+  * coco label merging tool now can deal with multiple files at once
 * 0.22.0
   * add tool for merging categories in coco label
 * 0.21.0

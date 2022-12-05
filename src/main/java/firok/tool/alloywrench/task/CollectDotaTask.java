@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class CollectDotaTask
 {
-	public static void execute(String pathFileMapping, String... pathSourceFolders)
+	public static void execute(String pathFileMapping, String... pathSourceFolders) throws Exception
 	{
 		var fileMapping = new File(pathFileMapping);
 		if(fileMapping.exists())
@@ -74,15 +74,7 @@ public class CollectDotaTask
 
 		// 把映射写到文件里
 		var om = new ObjectMapper();
-		try
-		{
-			om.writeValue(fileMapping, mapping);
-		}
-		catch (IOException any)
-		{
-			System.out.printf("写入映射文件出错 [%s]\n", any.getMessage());
-			return;
-		}
+		om.writeValue(fileMapping, mapping);
 
 		System.out.println("写入映射完成");
 	}

@@ -11,7 +11,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 22, 0);
+	public static final Version version = new Version(0, 23, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -25,7 +25,20 @@ public class AlloyWrench
 		}
 		return true;
 	}
-	public static void main(String[] args)
+	private static boolean compare(String[] args, String... needs)
+	{
+		if(needs == null || needs.length == 0) return true;
+		if(args == null || args.length < needs.length) return false;
+		for(int step = 0; step < needs.length; step++)
+		{
+			var need = needs[step];
+			if(need == null) continue;
+			var arg = args[step];
+			if (!Objects.equals(arg, need)) return false;
+		}
+		return true;
+	}
+	public static void main(String[] args) throws Exception
 	{
 //		final var len = args == null ? 0 : args.length;
 		if(compare(args, 7, "convert", "dota", "yolo"))
@@ -64,15 +77,19 @@ public class AlloyWrench
 			CollectDotaTask.execute(pathMappingFile, pathSourceFolders);
 		}
 
-		else if(compare(args, 5, "merge", "coco"))
-			MergeCocoTask.execute(args[2], args[3], args[4]);
-
+		else if(compare(args, "merge", "coco", "multi") && args.length > 5)
+		{
+			MergeCocoTask.execute(
+					Arrays.copyOfRange(args, 4, args.length),
+					args[3]
+			);
+		}
 		else if(compare(args, 7, "cut", "block", "direct"))
 			CutImageDirectTask.execute(args[3], args[4], args[5], args[6], args[7], args[8]);
 		else if(compare(args, 7, "cut", "block", "dota"))
 			CutImageBlockDotaTask.execute(args[3], args[4], args[5], args[6]);
-		else if(compare(args, 7, "cut", "block", "coco"))
-			CutImageBlockCocoTask.execute(args[3], args[4], args[5], args[6]);
+		else if(compare(args, 8, "cut", "block", "coco"))
+			CutImageBlockCocoTask.execute(args[3], args[4], args[5], args[6], args[7]);
 		else if(compare(args, 6, "cut", "coco"))
 			CutImageBlockByCocoInstanceTask.execute(args[2], args[3], args[4], args[5]);
 
@@ -196,11 +213,12 @@ public class AlloyWrench
 				- {target-label-folder} 储存切分后标签的目录
 				
 				* 把单一的 COCO 标签图按照矩形范围切割成小图 COCO 数据集
-				> cut block coco {label-file} {image-folder} {target-label-file} {target-image-folder}
+				> cut block coco {label-file} {image-folder} {target-label-file} {target-image-folder} {image-prefix}
 				- {label-file} 要切割的标签文件
 				- {image-folder} 要切割的图片目录
 				- {target-label-file} 目标标签文件
 				- {target-image-folder} 目标图片目录
+				- {image-prefix} 切分的子图片文件名前缀
 				
 				* 根据 COCO 标签数据切分图片, 只保留每个实例本身
 				> cut coco {image-file} {label-file} {target-image-folder} {target-label-folder}
@@ -210,9 +228,8 @@ public class AlloyWrench
 				- {target-label} 储存切分后标签的文件
 				
 				* 合并两个 COCO 标签文件
-				> merge coco {label1-file} {label2-file} {label-output}
-				- {label1-file} 文件1
-				- {label2-file} 文件2
+				> merge coco multi {label-output} {label-file} {label-file} [{label-file}...]
+				- {label-file} 文件
 				- {label-output} 目标输出文件
 				
 				* 合并 COCO 标签文件中的种类

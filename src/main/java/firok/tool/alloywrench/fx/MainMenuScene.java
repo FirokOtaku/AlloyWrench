@@ -14,6 +14,7 @@ public class MainMenuScene implements IScene
 
 	HBox lineMarker;
 	Button buttonMarker;
+	Button buttonDSManager;
 
 	@Getter
 	Scene scene;
@@ -24,10 +25,14 @@ public class MainMenuScene implements IScene
 		var menuBoxChildren = menuBox.getChildren();
 
 		lineMarker = new HBox();
-		buttonMarker = new Button("启动图片标注工具");
-		buttonMarker.setFont(fontUI);
-		buttonMarker.setPadding(paddingBtn);
-		buttonMarker.setOnAction(event -> bus.accept(new SwitchSceneEvent(Scenes.MARKER)));
+//		buttonMarker = new Button("启动图片标注工具");
+//		buttonMarker.setFont(fontUI);
+//		buttonMarker.setPadding(paddingBtn);
+//		buttonMarker.setOnAction(event -> bus.accept(new SwitchSceneEvent(Scenes.MARKER)));
+		buttonDSManager = new Button("数据集管理工具");
+		buttonDSManager.setFont(fontUI);
+		buttonDSManager.setPadding(paddingBtn);
+		buttonDSManager.setOnAction(event -> bus.accept(new SwitchSceneEvent(Scenes.DS_MGR)));
 		lineMarker.getChildren().addAll(buttonMarker);
 		menuBoxChildren.add(lineMarker);
 

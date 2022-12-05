@@ -14,6 +14,9 @@ open module firok.tool.alloywrench {
 
 	requires lombok;
 	requires spatial4j;
+	requires org.controlsfx.controls;
+	requires javafx.web;
+	requires javafx.fxml;
 
 //	opens firok.tool.alloywrench to javafx.controls;
 //	opens firok.tool.alloywrench;

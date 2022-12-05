@@ -1,6 +1,7 @@
 package firok.tool.alloywrench.fx;
 
 import firok.tool.alloywrench.AlloyWrench;
+import firok.tool.alloywrench.fx.dsmgr.DSMgrScene;
 import firok.tool.alloywrench.fx.marker.MarkerScene;
 import firok.tool.alloywrench.task.FxBase;
 import javafx.scene.paint.Color;
@@ -37,6 +38,7 @@ public class FxApp extends FxBase
 			switch (event.scene)
 			{
 				case Scenes.MARKER -> _switchMarker();
+				case Scenes.DS_MGR -> _switchDSMgr();
 				case Scenes.MAIN_MENU -> _switchMainMenu();
 			}
 		}
@@ -44,6 +46,12 @@ public class FxApp extends FxBase
 	private void _switchMainMenu()
 	{
 		this.scene = new MainMenuScene(this::onEvent);
+		var scene = this.scene.getScene();
+		this.stage.setScene(scene);
+	}
+	private void _switchDSMgr()
+	{
+		this.scene = new DSMgrScene(this::onEvent);
 		var scene = this.scene.getScene();
 		this.stage.setScene(scene);
 	}
@@ -57,7 +65,7 @@ public class FxApp extends FxBase
 	@Override
 	protected void postStart()
 	{
-		this.onEvent(new SwitchSceneEvent(Scenes.MARKER)); // init event
+		this.onEvent(new SwitchSceneEvent(Scenes.DS_MGR)); // init event
 		super.stage.setMinWidth(450);
 		super.stage.setMinHeight(300);
 		super.stage.setTitle(AlloyWrench.name + " " + AlloyWrench.version + " by " + AlloyWrench.author);

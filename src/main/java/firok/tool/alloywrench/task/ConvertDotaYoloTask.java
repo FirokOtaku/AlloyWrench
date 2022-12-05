@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class ConvertDotaYoloTask
 {
-	public static void execute(String pathSourceFolder, String pathImageFolder, String pathMappingFile, String pathTargetFolder)
+	public static void execute(String pathSourceFolder, String pathImageFolder, String pathMappingFile, String pathTargetFolder) throws Exception
 	{
 		var folderSource = new File(pathSourceFolder);
 		var folderImage = new File(pathImageFolder);
@@ -85,7 +85,7 @@ public class ConvertDotaYoloTask
 		}
 		catch (Exception any)
 		{
-			System.out.printf("读取映射文件失败 [%s]\n", any.getMessage());
+			throw new RuntimeException("读取映射文件失败 [%s]".formatted(any.getMessage()));
 		}
 
 		Arrays.stream(files).parallel().forEach(fileIn -> {
@@ -186,8 +186,7 @@ public class ConvertDotaYoloTask
 			}
 			catch (IOException any)
 			{
-				System.out.printf("写入文件发生错误, 跳过文件 [%s]\n", fileOut.getAbsolutePath());
-				return;
+				throw new RuntimeException("写入文件发生错误, 跳过文件 [%s]".formatted(fileOut.getAbsolutePath()), any);
 			}
 
 			System.out.printf("完成处理 [%s]\n", filename);

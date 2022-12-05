@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ConvertLabelmeDotaTask
 {
-	public static void execute(String pathSource, String pathTarget)
+	public static void execute(String pathSource, String pathTarget) throws Exception
 	{
 		var fileSource = new File(pathSource);
 		if(!fileSource.exists())
@@ -31,61 +31,53 @@ public class ConvertLabelmeDotaTask
 
 		var om = new ObjectMapper();
 
-		try
+		System.out.println("读取 labelme 标签数据");
+		var json = om.readTree(fileSource);
+
+		var shapes = json.get("shapes") instanceof ArrayNode arr ? arr : null;
+		if(shapes == null)
 		{
-			System.out.println("读取 labelme 标签数据");
-			var json = om.readTree(fileSource);
-
-			var shapes = json.get("shapes") instanceof ArrayNode arr ? arr : null;
-			if(shapes == null)
-			{
-				System.out.println("JSON 格式错误");
-				return;
-			}
-			if(shapes.size() == 0)
-			{
-				System.out.println("图形数量为 0");
-				return;
-			}
-
-			var listLabelme = LabelmeReader.read(pathSource);
-			System.out.printf("共读取到 %d 个图形\n", listLabelme.size());
-
-			var listDota = new ArrayList<DotaLabel>();
-			for(var labelme : listLabelme)
-			{
-				var pt1 = labelme.points().get(0);
-				var pt2 = labelme.points().get(1);
-				var pt3 = labelme.points().get(2);
-				var pt4 = labelme.points().get(3);
-				var imageWidth = labelme.imageWidth();
-				var imageHeight = labelme.imageHeight();
-				var catalog = labelme.catalog();
-				var label = new DotaLabel(
-						pt1, pt2, pt3, pt4,
-						catalog, false,
-						imageWidth, imageHeight
-				);
-				listDota.add(label);
-			}
-
-			System.out.println("创建 DOTA 标签文件");
-			try(var out = new PrintStream(fileTarget, StandardCharsets.UTF_8))
-			{
-				for(var labelDota : listDota)
-				{
-					var text = labelDota.toLabelText();
-					out.println(text);
-				}
-				out.flush();
-			}
-
-			System.out.println("完成");
+			System.out.println("JSON 格式错误");
+			return;
 		}
-		catch (Exception any)
+		if(shapes.size() == 0)
 		{
-			any.printStackTrace(System.err);
-			System.err.println("执行过程发生错误");
+			System.out.println("图形数量为 0");
+			return;
 		}
+
+		var listLabelme = LabelmeReader.read(pathSource);
+		System.out.printf("共读取到 %d 个图形\n", listLabelme.size());
+
+		var listDota = new ArrayList<DotaLabel>();
+		for(var labelme : listLabelme)
+		{
+			var pt1 = labelme.points().get(0);
+			var pt2 = labelme.points().get(1);
+			var pt3 = labelme.points().get(2);
+			var pt4 = labelme.points().get(3);
+			var imageWidth = labelme.imageWidth();
+			var imageHeight = labelme.imageHeight();
+			var catalog = labelme.catalog();
+			var label = new DotaLabel(
+					pt1, pt2, pt3, pt4,
+					catalog, false,
+					imageWidth, imageHeight
+			);
+			listDota.add(label);
+		}
+
+		System.out.println("创建 DOTA 标签文件");
+		try(var out = new PrintStream(fileTarget, StandardCharsets.UTF_8))
+		{
+			for(var labelDota : listDota)
+			{
+				var text = labelDota.toLabelText();
+				out.println(text);
+			}
+			out.flush();
+		}
+
+		System.out.println("完成");
 	}
 }

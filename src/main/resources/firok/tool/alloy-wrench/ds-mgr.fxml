@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="firok.tool.alloywrench.fx.dsmgr.DSMgrController">
+    <BorderPane>
+        <top>
+            <MenuBar>
+                <Menu text="文件">
+                    <MenuItem text="加载工程"/>
+                    <MenuItem text="保存工程"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="加载数据集"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="导出 COCO 数据集"/>
+                </Menu>
+            </MenuBar>
+        </top>
+        <left>
+            <CheckTreeView fx:id="tree" >
+            </CheckTreeView>
+        </left>
+        <center>
+            <TabPane>
+                <Tab text="信息">
+                    <Label text="未选中数据集"/>
+                </Tab>
+                <Tab text="重映射">
+                    <Label text="映射信息"/>
+                </Tab>
+            </TabPane>
+        </center>
+        <bottom>
+            <StatusBar text="状态栏">
+            </StatusBar>
+        </bottom>
+    </BorderPane>
+
+</VBox>
+
