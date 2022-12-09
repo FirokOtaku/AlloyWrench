@@ -54,7 +54,7 @@ public class ConvertMultiPolygonGeojsonCocoTask
 		left = new BigDecimal(rawBorder4[2]);
 		right = new BigDecimal(rawBorder4[3]);
 		borderWidth = right.subtract(left);
-		borderHeight = bottom.subtract(top);
+		borderHeight = top.subtract(bottom);
 
 		var refImage = new Ref<BufferedImage>();
 		var refGeojson = new Ref<GeojsonData>();
@@ -77,8 +77,10 @@ public class ConvertMultiPolygonGeojsonCocoTask
 		smt.throwAnyException();
 
 		final int imageHeight = refImage.entry.getHeight(), imageWidth = refImage.entry.getWidth();
-		final var factorX = new BigDecimal(imageWidth).divide(borderWidth, RoundingMode.HALF_UP);
-		final var factorY = new BigDecimal(imageHeight).divide(borderHeight, RoundingMode.HALF_UP);
+		final var iw = new BigDecimal(imageWidth);
+		final var ih = new BigDecimal(imageHeight);
+		final var factorX = iw.divide(borderWidth, RoundingMode.HALF_UP);
+		final var factorY = ih.divide(borderHeight, RoundingMode.HALF_UP);
 
 		var features = refGeojson.entry.getFeatures();
 		if(Collections.isEmpty(features))
@@ -148,8 +150,12 @@ public class ConvertMultiPolygonGeojsonCocoTask
 					var geoX = point[0];
 					var geoY = point[1];
 					// 像素坐标
+					// (geoX - left) * imageWidth / borderWidth
+					// (geoY - bottom) * imageHeight / borderHeight
 					var pixelX = geoX.subtract(left).multiply(factorX);
-					var pixelY = geoY.subtract(top).multiply(factorY);
+					var pixelY = ih.subtract(
+							geoY.subtract(bottom).multiply(factorY)
+					);
 
 					segmentation.add(pixelX);
 					segmentation.add(pixelY);

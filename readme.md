@@ -160,6 +160,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.24.0
+  * fix border coor calculation error
 * 0.23.0
   * coco label merging tool now can deal with multiple files at once
 * 0.22.0
