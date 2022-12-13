@@ -1,5 +1,6 @@
 package firok.tool.alloywrench.bean;
 
+import javax.swing.border.Border;
 import java.math.BigDecimal;
 
 /**
@@ -34,21 +35,38 @@ public class Border4
 		this.borderHeight = bottom.subtract(top);
 	}
 
+	/**
+	 * 像素横坐标 -> 四至横坐标
+	 * */
 	public BigDecimal xOf(double x)
 	{
 		return BigDecimal.valueOf(x / imageWidth).multiply(borderWidth).add(left);
 	}
+	/**
+	 * 像素纵坐标 -> 四至纵坐标
+	 * */
 	public BigDecimal yOf(double y)
 	{
 		return BigDecimal.valueOf(y / imageHeight).multiply(borderHeight).add(top);
 	}
 
+	/**
+	 * 根据像素坐标 计算一个新的四至范围
+	 * */
 	public Border4 cut(double fromX, double fromY, double toX, double toY)
 	{
 		return new Border4(
 				yOf(fromY), yOf(toY), xOf(fromX), xOf(toX),
 				toX - fromX,
-				toY - fromX
+				toY - fromY
+		);
+	}
+	public Border4 cut(IntRect rect)
+	{
+		return new Border4(
+				yOf(rect.fromY()), yOf(rect.toY()), xOf(rect.fromX()), xOf(rect.toX()),
+				rect.toX() - rect.fromX(),
+				rect.toY() - rect.fromY()
 		);
 	}
 }

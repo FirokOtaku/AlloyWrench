@@ -1,11 +1,13 @@
 package firok.tool.alloywrench.task;
 
+import firok.tool.alloywrench.bean.IntRect;
 import firok.tool.alloywrench.util.Images;
 import firok.topaz.Files;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.*;
 
 public class CutImageDirectTask
 {
@@ -21,13 +23,26 @@ public class CutImageDirectTask
 		var fileImage = new File(pathImage);
 		var folderImage = new File(pathImageOut);
 		int cutWidth, cutHeight, overlyingWidth, overlyingHeight;
-		Files.assertExist(fileImage, true, "图片文件不存在");
-		Files.assertNoExist(folderImage, "目标目录已经存在");
 		cutWidth = Integer.parseInt(paramCutWidth);
 		cutHeight = Integer.parseInt(paramCutHeight);
 		overlyingWidth = Integer.parseInt(paramOverlyingWidth);
 		overlyingHeight = Integer.parseInt(paramOverlyingHeight);
+		cutImage(fileImage, folderImage, cutWidth, cutHeight, overlyingWidth, overlyingHeight);
+		System.out.println("一段直接的旅程结束了");
+	}
 
+	/**
+	 * 把中间运算用到的数据提供出来
+	 * */
+	public static Map<IntRect, File> cutImage(
+			File fileImage,
+			File folderImage,
+			int cutWidth, int cutHeight,
+			int overlyingWidth, int overlyingHeight
+	) throws Exception
+	{
+		Files.assertExist(fileImage, true, "图片文件不存在");
+		Files.assertNoExist(folderImage, "目标目录已经存在");
 
 		System.out.println("加载图片数据");
 		var image = ImageIO.read(fileImage);
@@ -38,10 +53,11 @@ public class CutImageDirectTask
 		if(crs.isEmpty())
 		{
 			System.out.println("无需切割");
-			return;
+			return null;
 		}
 		folderImage.mkdirs();
-		var _filename = Paths.get(pathImage).getFileName().toString();
+		var ret = new HashMap<IntRect, File>();
+		var _filename = fileImage.getName();
 		var filename = _filename.substring(0, _filename.lastIndexOf('.'));
 		System.out.println("开始切分图片并写入");
 		crs.stream().parallel().forEach(cr -> {
@@ -51,6 +67,10 @@ public class CutImageDirectTask
 			try
 			{
 				ImageIO.write(imageSub, "png", fileSub);
+				synchronized (ret)
+				{
+					ret.put(cr, fileSub);
+				}
 			}
 			catch (Exception any)
 			{
@@ -59,6 +79,6 @@ public class CutImageDirectTask
 			}
 		});
 		System.out.println("写入切分图片完成");
-		System.out.println("一段直接的旅程结束了");
+		return ret;
 	}
 }
