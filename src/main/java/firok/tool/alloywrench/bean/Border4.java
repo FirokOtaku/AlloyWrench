@@ -1,6 +1,5 @@
 package firok.tool.alloywrench.bean;
 
-import javax.swing.border.Border;
 import java.math.BigDecimal;
 
 /**
@@ -32,7 +31,25 @@ public class Border4
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
 		this.borderWidth = right.subtract(left);
-		this.borderHeight = bottom.subtract(top);
+		this.borderHeight = top.subtract(bottom);
+	}
+	public Border4(
+			double top,
+			double bottom,
+			double left,
+			double right,
+			double imageWidth,
+			double imageHeight
+	)
+	{
+		this(
+				BigDecimal.valueOf(top),
+				BigDecimal.valueOf(bottom),
+				BigDecimal.valueOf(left),
+				BigDecimal.valueOf(right),
+				imageWidth,
+				imageHeight
+		);
 	}
 
 	/**
@@ -47,7 +64,7 @@ public class Border4
 	 * */
 	public BigDecimal yOf(double y)
 	{
-		return BigDecimal.valueOf(y / imageHeight).multiply(borderHeight).add(top);
+		return BigDecimal.ONE.subtract(BigDecimal.valueOf(y / imageHeight)).multiply(borderHeight).add(bottom);
 	}
 
 	/**
@@ -68,5 +85,11 @@ public class Border4
 				rect.toX() - rect.fromX(),
 				rect.toY() - rect.fromY()
 		);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "B4[%f,%f-%f,%f](%f,%f)".formatted(left,top,right,bottom, imageWidth, imageHeight);
 	}
 }

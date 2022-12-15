@@ -160,6 +160,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.26.0
+  * fix a coor calculation error
+  * fix coco json read error
 * 0.25.0
   * fix a coor calculation error
   * provide `CutImageDirectTask` api
