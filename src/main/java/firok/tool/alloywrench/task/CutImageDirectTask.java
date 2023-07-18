@@ -2,7 +2,7 @@ package firok.tool.alloywrench.task;
 
 import firok.tool.alloywrench.bean.IntRect;
 import firok.tool.alloywrench.util.Images;
-import firok.topaz.Files;
+import firok.topaz.resource.Files;
 
 import javax.imageio.ImageIO;
 import java.io.File;

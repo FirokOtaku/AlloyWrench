@@ -2,7 +2,7 @@ package firok.tool.alloywrench.fx.marker;
 
 import firok.tool.alloywrench.fx.Event;
 import firok.tool.alloywrench.fx.IScene;
-import firok.topaz.Maths;
+import firok.topaz.math.Maths;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

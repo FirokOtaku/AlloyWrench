@@ -1,6 +1,6 @@
 package firok.tool.alloywrench.fx.marker;
 
-import firok.topaz.Maths;
+import firok.topaz.math.Maths;
 
 public interface ITask
 {

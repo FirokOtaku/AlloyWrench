@@ -7,7 +7,7 @@ import firok.tool.alloywrench.bean.ScriptJsonData;
 import firok.tool.alloywrench.bean.YoloLabel;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
-import firok.topaz.RegexPipeline;
+import firok.topaz.general.RegexPipeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import firok.tool.alloywrench.bean.CocoData;
 import firok.tool.alloywrench.util.Jsons;
-import firok.topaz.Files;
+import firok.topaz.resource.Files;
 
 import java.io.File;
 import java.util.*;

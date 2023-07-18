@@ -4,8 +4,8 @@ import firok.tool.alloywrench.bean.*;
 import firok.tool.alloywrench.util.DotaReader;
 import firok.tool.alloywrench.util.Files;
 import firok.tool.alloywrench.util.Images;
-import firok.topaz.MayRunnable;
-import firok.topaz.SimpleMultiThread;
+import firok.topaz.function.MayRunnable;
+import firok.topaz.thread.SimpleMultiThread;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

@@ -6,8 +6,8 @@ import firok.tool.alloywrench.bean.CocoData;
 import firok.tool.alloywrench.bean.IntRect;
 import firok.tool.alloywrench.util.Geos;
 import firok.tool.alloywrench.util.Images;
-import firok.topaz.Files;
-import firok.topaz.SimpleMultiThread;
+import firok.topaz.resource.Files;
+import firok.topaz.thread.SimpleMultiThread;
 import org.locationtech.jts.geom.Geometry;
 
 import javax.imageio.ImageIO;
@@ -105,7 +105,7 @@ public class CutImageBlockCocoTask
 				},
 				() -> { // 把不同图片 id 对应的标签提取出来
 					System.out.println("提取图片标签");
-					var mapping = firok.topaz.Collections.mappingKeyMultiEntityList(
+					var mapping = firok.topaz.general.Collections.mappingKeyMultiEntityList(
 							annotations,
 							CocoData.Annotation::getImageId
 					);

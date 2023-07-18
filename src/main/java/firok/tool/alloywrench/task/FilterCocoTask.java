@@ -2,12 +2,12 @@ package firok.tool.alloywrench.task;
 
 import firok.tool.alloywrench.bean.CocoData;
 import firok.tool.alloywrench.util.Jsons;
-import firok.topaz.Files;
+import firok.topaz.resource.Files;
 
 import java.io.File;
 import java.util.*;
 
-import static firok.topaz.Collections.isEmpty;
+import static firok.topaz.general.Collections.isEmpty;
 
 public class FilterCocoTask
 {

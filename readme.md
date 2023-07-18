@@ -160,6 +160,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.27.0
+  * update dependency
 * 0.26.0
   * fix a coor calculation error
   * fix coco json read error

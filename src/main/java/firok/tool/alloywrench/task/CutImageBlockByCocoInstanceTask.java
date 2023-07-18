@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import firok.topaz.Files;
-import firok.topaz.Maths;
-import firok.topaz.SimpleMultiThread;
+import firok.topaz.resource.Files;
+import firok.topaz.math.Maths;
+import firok.topaz.thread.SimpleMultiThread;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

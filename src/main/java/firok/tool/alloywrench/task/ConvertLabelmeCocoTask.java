@@ -5,7 +5,7 @@ import firok.tool.alloywrench.bean.CocoData;
 import firok.tool.alloywrench.bean.DecimalPoint;
 import firok.tool.alloywrench.bean.LabelmeData;
 import firok.tool.alloywrench.util.Jsons;
-import firok.topaz.Files;
+import firok.topaz.resource.Files;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Polygon;
@@ -37,7 +37,7 @@ public class ConvertLabelmeCocoTask
 		System.out.println("读取 labelme 数据");
 		var labelme = om.readValue(fileLabelmeInput, LabelmeData.class);
 		final var shapes = labelme.getShapes();
-		if(firok.topaz.Collections.sizeOf(shapes) <= 0)
+		if(firok.topaz.general.Collections.sizeOf(shapes) <= 0)
 		{
 			System.out.println("无图形");
 			return;
@@ -82,7 +82,7 @@ public class ConvertLabelmeCocoTask
 			var segmentations = new ArrayList<List<BigDecimal>>();
 			var segmentation = new ArrayList<BigDecimal>();
 			var points = shape.getPoints();
-			if(firok.topaz.Collections.sizeOf(points) <= 0)
+			if(firok.topaz.general.Collections.sizeOf(points) <= 0)
 			{
 				System.out.println("多边形点数量不足");
 				return;

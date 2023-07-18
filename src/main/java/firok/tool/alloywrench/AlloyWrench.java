@@ -3,7 +3,7 @@ package firok.tool.alloywrench;
 import firok.tool.alloywrench.http.ConvertScriptJsonGeojsonServer;
 import firok.tool.alloywrench.task.*;
 import firok.topaz.Topaz;
-import firok.topaz.Version;
+import firok.topaz.general.Version;
 
 import java.util.*;
 

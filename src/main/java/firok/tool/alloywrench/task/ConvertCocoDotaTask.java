@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import firok.tool.alloywrench.bean.DecimalPoint;
 import firok.tool.alloywrench.bean.DotaLabel;
-import firok.topaz.Files;
-import firok.topaz.Ref;
-import firok.topaz.SimpleMultiThread;
+import firok.topaz.resource.Files;
+import firok.topaz.thread.Ref;
+import firok.topaz.thread.SimpleMultiThread;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -51,7 +51,7 @@ public class ConvertCocoDotaTask
 					if(arrCategory == null || arrCategory.isEmpty())
 						return;
 
-					refMapCategory.entry = firok.topaz.Collections.mappingKeyValue(
+					refMapCategory.entry = firok.topaz.general.Collections.mappingKeyValue(
 							arrCategory,
 							cate -> cate.get("id").asInt(),
 							cate -> cate.get("name").asText()
@@ -62,7 +62,7 @@ public class ConvertCocoDotaTask
 					if(arrImage == null || arrImage.isEmpty())
 						return;
 
-					refMapImage.entry = firok.topaz.Collections.mappingKeyValue(
+					refMapImage.entry = firok.topaz.general.Collections.mappingKeyValue(
 							arrImage,
 							anno -> anno.get("id").asInt(),
 							anno -> anno.get("file_name").asText()
