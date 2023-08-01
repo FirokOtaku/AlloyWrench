@@ -159,7 +159,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * [JTS 库](https://github.com/locationtech/jts)
 
 ## changelog
-
+* 0.29.0
+  * update convert_result script for MMDetection3 compatibility
 * 0.28.0
   * adjust location of Python script and maven compiling config
 * 0.27.0
@@ -242,3 +243,4 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * 要是某些项目的文档全一点, 这里的轮子至少少一半
 * 自己写的 [库](https://github.com/FirokOtaku/Topaz) 肯定是要狠狠地用; 建议你们也用
 * 这玩意真的有别的人会用吗? 也许吧
+* 查看 COCO 数据集的功能在 [这里](https://github.com/FirokOtaku/TinWrench)
