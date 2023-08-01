@@ -160,6 +160,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.31.0
+  * add [`imantics` dependency](https://github.com/jsbroks/imantics/tree/master)
+    for converting inference results 
 * 0.30.0
   * add more params to convert_result script
 * 0.29.0

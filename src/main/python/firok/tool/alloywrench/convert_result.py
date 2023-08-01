@@ -47,14 +47,30 @@ def convert(target):
         return target
 
 
+import imantics
 # 把MMDetection探测到的实例数据转化成坐标点数据
 # 另外还附带一大堆别的玩意
-def convert_polygon(result, with_bboxes=True, with_masks=True):
+def convert_polygon(result,
+                    with_bboxes=True,
+                    with_polygons=True,
+                    with_masks=True):
     ret = []
     pred_instances = result.pred_instances
     for pred_instance in pred_instances:
-        ret.append({'labels': convert(pred_instance.labels),
-                    'bboxes': convert(pred_instance.bboxes) if with_bboxes else None,
-                    'masks': convert(pred_instance.masks) if with_masks else None,
-                    'scores': convert(pred_instance.scores)})
+        ret_part = {'labels': convert(pred_instance.labels),
+                    'scores': convert(pred_instance.scores)}
+        if with_bboxes:
+            ret_part['bboxes'] = convert(pred_instance.bboxes)
+        if with_polygons:
+            ret_polygons = []
+            for mask in pred_instances.masks:
+                mask_cpu = mask.cpu()
+                mask_obj = imantics.Mask(mask_cpu)
+                mask_polygons = mask_obj.polygons()
+                ret_polygons.append(mask_polygons.points)
+            ret_part['polygons'] = convert(ret_polygons)
+        if with_masks:
+            ret_part['masks'] = convert(pred_instance.masks)
+
+        ret.append(ret_part)
     return ret
