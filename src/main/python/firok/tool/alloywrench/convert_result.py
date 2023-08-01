@@ -1,3 +1,11 @@
+# since Alloy Wrench 0.30.0
+
+# 当前脚本面向 MMDetection 3,
+# 早先版本脚本请在 git 历史查看.
+# Current script is for MMDetection3.
+# Older version could be found in git history.
+
+
 from matplotlib.patches import Polygon
 import torch
 import numpy
@@ -41,12 +49,12 @@ def convert(target):
 
 # 把MMDetection探测到的实例数据转化成坐标点数据
 # 另外还附带一大堆别的玩意
-def convert_polygon(result):
+def convert_polygon(result, with_bboxes=True, with_masks=True):
     ret = []
     pred_instances = result.pred_instances
     for pred_instance in pred_instances:
         ret.append({'labels': convert(pred_instance.labels),
-                    'bboxes': convert(pred_instance.bboxes),
-                    'masks': convert(pred_instance.masks),
+                    'bboxes': convert(pred_instance.bboxes) if with_bboxes else None,
+                    'masks': convert(pred_instance.masks) if with_masks else None,
                     'scores': convert(pred_instance.scores)})
     return ret

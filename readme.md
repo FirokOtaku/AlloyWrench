@@ -159,6 +159,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * [JTS 库](https://github.com/locationtech/jts)
 
 ## changelog
+
+* 0.30.0
+  * add more params to convert_result script
 * 0.29.0
   * update convert_result script for MMDetection3 compatibility
 * 0.28.0
