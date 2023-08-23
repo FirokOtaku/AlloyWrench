@@ -1,4 +1,5 @@
 # since Alloy Wrench 0.30.0
+# latest updated at 0.32.0
 
 # 当前脚本面向 MMDetection 3,
 # 早先版本脚本请在 git 历史查看.
@@ -52,25 +53,23 @@ import imantics
 # 另外还附带一大堆别的玩意
 def convert_polygon(result,
                     with_bboxes=True,
-                    with_polygons=True,
-                    with_masks=True):
+                    with_polygons=True):
     ret = []
-    pred_instances = result.pred_instances
+    pred_instances = result.pred_instances  # todo replace with len(instances)
+    step_pred_instance = 0
     for pred_instance in pred_instances:
-        ret_part = {'labels': convert(pred_instance.labels),
-                    'scores': convert(pred_instance.scores)}
+        ret_part = {'label': convert(pred_instance.labels.item()),
+                    'score': convert(pred_instance.scores.item()) }
         if with_bboxes:
-            ret_part['bboxes'] = convert(pred_instance.bboxes)
+            bbox = pred_instance.bboxes.tolist()
+            ret_part['bbox'] = convert(bbox)[0]
         if with_polygons:
-            ret_polygons = []
-            for mask in pred_instances.masks:
-                mask_cpu = mask.cpu()
-                mask_obj = imantics.Mask(mask_cpu)
-                mask_polygons = mask_obj.polygons()
-                ret_polygons.append(mask_polygons.points)
-            ret_part['polygons'] = convert(ret_polygons)
-        if with_masks:
-            ret_part['masks'] = convert(pred_instance.masks)
+            mask = pred_instances.masks[step_pred_instance]
+            mask_cpu = mask.cpu()
+            mask_obj = imantics.Mask(mask_cpu)
+            mask_polygons = mask_obj.polygons()
+            ret_part['polygon'] = convert(mask_polygons.points)
 
         ret.append(ret_part)
+        step_pred_instance = step_pred_instance + 1
     return ret
