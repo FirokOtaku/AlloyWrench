@@ -231,12 +231,12 @@ public class ConvertCocoMvtecTask
                 var typeIndex = mapTypeIndex.get(typeName).getAndIncrement(); // 这个用来决定输出的文件名
                 var indexDot = imageFilename.lastIndexOf('.');
                 var imageFormat = indexDot < 0 ? "png" : imageFilename.substring(indexDot + 1);
-                var filenameOutputImage = String.format("%03d.png", typeIndex);
+                var filenameIndex = String.format("%03d", typeIndex);
 
                 //noinspection PointlessBooleanExpression
                 if(true || isNeedOutputImage) // 实际上这里肯定为 true, 那就手动加上 true 告诉编译器咯
                 {
-                    var fileOutputImage = new File(folderOutputImage, filenameOutputImage);
+                    var fileOutputImage = new File(folderOutputImage, filenameIndex + ".png");
                     ((MayRunnable) () -> {
                         fileOutputImage.getParentFile().mkdirs();
                         fileOutputImage.createNewFile();
@@ -270,7 +270,7 @@ public class ConvertCocoMvtecTask
                 if(isNeedOutputMask)
                 {
                     var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-                    var fileOutputMask = new File(folderOutputMask, filenameOutputImage);
+                    var fileOutputMask = new File(folderOutputMask, filenameIndex + "_mask.png");
                     ((MayRunnable) () -> {
                         fileOutputMask.getParentFile().mkdirs();
                         fileOutputMask.createNewFile();
