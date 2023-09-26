@@ -28,4 +28,16 @@ public class StringTests
 				filename.substring(0, filename.lastIndexOf('.'))
 		);
 	}
+
+	@Test
+	public void testIntegerFormat()
+	{
+		var str = new StringBuilder();
+		for(var step = 0; step < 111; step++)
+		{
+			var line = String.format("%03d.png", step);
+			str.append(line).append("\n\r");
+		}
+		System.out.println(str);
+	}
 }

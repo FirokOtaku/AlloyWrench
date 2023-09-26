@@ -11,7 +11,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 32, 0);
+	public static final Version version = new Version(0, 33, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)
@@ -49,6 +49,9 @@ public class AlloyWrench
 
 		else if(compare(args, 5, "convert", "coco", "dota"))
 			ConvertCocoDotaTask.execute(args[3], args[4]);
+
+		else if(compare(args, 7, "convert", "coco", "mvtec"))
+			ConvertCocoMvtecTask.execute(args[3], args[4], args[5], args[6]);
 
 		else if(compare(args, 5, "convert", "labelme", "coco"))
 			ConvertLabelmeCocoTask.execute(args[3], args[4]);
@@ -189,6 +192,13 @@ public class AlloyWrench
 				> convert coco dota {label-file} {target-label-folder}
 				* {label-file} 要转换的 COCO 数据文件
 				* {target-label-folder} 导出目标目录
+				
+				* 将 COCO 数据集转换为 MVTec 格式
+				> convert coco mvtec {images-folder} {label-file} {mapping-file} {target-folder}
+				- {images-folder} COCO 图片目录
+				- {label-file} COCO 标签文件
+				- {mapping-file} 映射文件, 格式详见 GitHub 文档
+				- {target-folder} 储存转换后数据集的目录
 				
 				* 将 labelme 数据集 JSON 转换为 YOLO 格式
 				> convert labelme yolo {labelme-file} {yolo-file} {mapping-file}

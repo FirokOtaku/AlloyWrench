@@ -2,13 +2,13 @@
 
 一些 ~~研究~~ 折腾机器视觉框架时候用到的 ~~工具~~ 轮子代码.
 
-代码基于 **Java 17**, 依赖 [Topaz 库](https://github.com/FirokOtaku/Topaz), 以 MIT 协议开源.
+代码基于 ~~**Java 17**~~ **Java 21**, 依赖 [Topaz 库](https://github.com/FirokOtaku/Topaz), 以 MIT 协议开源.
 
 > _为什么用 Java?_  
 > 因为主业是写 Java 的, 写着习惯
 > 
-> _<del><sub>为什么不用 Java 8?!</sub></del> 为什么是 Java 17?_  
-> <del><sub>因为相信的心就是你的魔法</sub></del> 因为乐意
+> _<del><sub>为什么不用 Java 8?!</sub></del> <del>为什么是 Java 17?</del> 为什么是 Java 21?_  
+> <del><sub>因为相信的心就是你的魔法哟~</sub></del> 因为乐意
 >
 > _这一切值得吗?_  
 > 能用就行, 哪来那么多毛病
@@ -59,6 +59,14 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert coco dota ^
  "./coco-label.json" ^
  "./coco-2-dota-label/"
+
+# 将 COCO 数据集转换为 MVTec 格式
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert coco mvtec ^
+ "./coco-dataset/images" ^
+ "./coco-dataset/coco-label.json" ^
+ "./playground/mapping.json" ^
+ "./playground/output-dataset"
 
 # 将 labelme 创建的 JSON 数据文件转换为 COCO 格式的
 java -jar alloy-wrench-jar-with-dependencies.jar ^
@@ -149,6 +157,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  marker
 ```
 
+* `convert coco mvtec` [COCO 数据集转换 MVTec 数据集 - 映射文件格式](doc-convert-coco-mvtec-mapping-format.md)
+
 ## 相关链接
 
 * [DOTA 数据集](https://captain-whu.github.io/DOTA/index.html)
@@ -157,9 +167,13 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 * [MMDetection 框架](https://github.com/open-mmlab/mmdetection)
 * [MMDetection 框架官网](https://mmdetection.readthedocs.io/zh_CN/latest/)
 * [JTS 库](https://github.com/locationtech/jts)
+* [MVTec 数据集](https://www.mvtec.com/company/research/datasets/mvtec-ad)
 
 ## changelog
 
+* 0.33.0
+  * add convert from coco dataset to mvtec dataset
+  * **JDK dependency upgrade to 21 from 17**
 * 0.32.0
   * fix an inference result conversion error
 * 0.31.0
