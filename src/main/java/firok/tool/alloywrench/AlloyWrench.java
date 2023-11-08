@@ -11,7 +11,7 @@ public class AlloyWrench
 {
 	public static final String name = "Alloy Wrench";
 	public static final String author = "Firok";
-	public static final Version version = new Version(0, 33, 0);
+	public static final Version version = new Version(0, 34, 0);
 	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
 
 	private static boolean compare(String[] args, int length, String... needs)

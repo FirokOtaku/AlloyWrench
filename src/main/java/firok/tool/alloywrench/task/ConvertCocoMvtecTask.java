@@ -37,6 +37,9 @@ public class ConvertCocoMvtecTask
 {
     private static final GeometryFactory facGeo = JtsSpatialContext.GEO.getShapeFactory().getGeometryFactory();
 
+    public static boolean CHECK_TRAIN_GOOD = false;
+    public static boolean CHECK_TEST_GOOD = false;
+
     public static void execute(String pathImages, String pathDataset, String pathMapping, String pathOutput)
     {
         var folderImages = new File(pathImages);
@@ -66,7 +69,7 @@ public class ConvertCocoMvtecTask
         }
 
         var refCoco = new Ref<CocoData>();
-        var refMapping = new Ref<Map<String, List<String>>>();
+        var refMapping = new Ref<Map<String, Set<String>>>();
         Threads.waitFor(
                 () -> { // 加载 COCO 数据集
                     var om = new ObjectMapper();
@@ -92,12 +95,12 @@ public class ConvertCocoMvtecTask
             System.out.println("映射规则加载错误");
             return;
         }
-        if(!refMapping.entry.containsKey("train.good"))
+        if(CHECK_TRAIN_GOOD && !refMapping.entry.containsKey("train.good"))
         {
             System.out.println("映射规则缺少 train.good 字段");
             return;
         }
-        if(!refMapping.entry.containsKey("test.good"))
+        if(CHECK_TEST_GOOD && !refMapping.entry.containsKey("test.good"))
         {
             System.out.println("映射规则缺少 test.good 字段");
             return;
@@ -218,6 +221,12 @@ public class ConvertCocoMvtecTask
                             shapeMask.entry = shapeMask.entry.union(polygon);
                         }
                         shapeMask.entry = shapeMask.entry.buffer(0);
+                        var area = shapeMask.entry.getArea();
+                        if(area <= 0)
+                        {
+                            System.out.println("计算区域面积为 0, 跳过输出");
+                            isNeedOutputImage = isNeedOutputMask = false;
+                        }
                     }
                 }
 

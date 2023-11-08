@@ -171,6 +171,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.34.0
+  * fix a logic error when converting coco dataset to mvtec dataset
 * 0.33.0
   * add convert from coco dataset to mvtec dataset
   * **JDK dependency upgrade to 21 from 17**
