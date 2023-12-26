@@ -18,6 +18,8 @@ open module firok.tool.alloywrench {
 	requires javafx.web;
 	requires javafx.fxml;
 
+	requires firok.topaz;
+
 //	opens firok.tool.alloywrench to javafx.controls;
 //	opens firok.tool.alloywrench;
 }

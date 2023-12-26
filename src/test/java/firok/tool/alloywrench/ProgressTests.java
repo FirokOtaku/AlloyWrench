@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ProgressTests
 {
-	@Test
+//	@Test
 	public void test() throws Exception
 	{
 		var file = new File("V:\\221012 影像示例\\前三甲-地图切片\\前三甲1 .png");

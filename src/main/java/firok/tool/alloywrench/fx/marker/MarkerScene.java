@@ -247,7 +247,7 @@ public class MarkerScene implements IScene
 	}
 	private static double r01(double value)
 	{
-		return Maths.range(value, 0, 1);
+		return Maths.range(value, 0D, 1D);
 	}
 	/**
 	 * 根据图片真实坐标 移动到相应位置

@@ -18,6 +18,24 @@
 
 ## 用法
 
+```xml
+<!-- if u want Maven -->
+<!-- then u'll have to take pom -->
+<repositories>
+    <repository>
+        <id>github-alloy-wrench</id>
+        <url>https://maven.pkg.github.com/FirokOtaku/AlloyWrench</url>
+    </repository>
+</repositories>
+<dependencies>
+  <dependency>
+    <groupId>firok.tool</groupId>
+    <artifactId>alloy-wrench</artifactId>
+    <version>0.35.0</version>
+  </dependency>
+</dependencies>
+```
+
 ```bash
 # 神说 要有 jar
 # 出于未知且知道也懒得修复的问题 现在打包出来的玩意不能用
@@ -171,6 +189,9 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.35.0
+  * upgrade dependencies versions
+  * **[license](license) change to MulanPSL2 from MIT**
 * 0.34.0
   * fix a logic error when converting coco dataset to mvtec dataset
 * 0.33.0

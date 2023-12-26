@@ -7,12 +7,32 @@ import firok.topaz.general.Version;
 
 import java.util.*;
 
+import firok.topaz.general.ProgramMeta;
+
 public class AlloyWrench
 {
-	public static final String name = "Alloy Wrench";
-	public static final String author = "Firok";
-	public static final Version version = new Version(0, 34, 0);
-	public static final String link = "https://github.com/FirokOtaku/AlloyWrench";
+	/**
+	 * @since 0.35.0
+	 * */
+	public static final ProgramMeta META = new ProgramMeta(
+			"firok.tool.allywrench",
+			"Alloy Wrench",
+			new Version(0, 35, 0),
+			"some util code for learning machine vision",
+			List.of("Firok"),
+			List.of("https://github.com/FirokOtaku/AlloyWrench"),
+			List.of("https://github.com/FirokOtaku/AlloyWrench"),
+			""
+	);
+
+	@Deprecated(forRemoval = true)
+	public static final String name = META.name;
+	@Deprecated(forRemoval = true)
+	public static final String author = META.authors.get(0);
+	@Deprecated(forRemoval = true)
+	public static final Version version = META.version;
+	@Deprecated(forRemoval = true)
+	public static final String link = META.linkRepos.get(0);
 
 	private static boolean compare(String[] args, int length, String... needs)
 	{
@@ -261,7 +281,7 @@ public class AlloyWrench
 				
 				* 打开标签数据可视化工具
 				> renderer
-				""", name, version, author, Topaz.NAME, Topaz.VERSION, link);
+				""", name, version, author, Topaz.META.name, Topaz.META.version, link);
 	}
 
 

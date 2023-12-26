@@ -7,7 +7,7 @@
 
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
-    <version>0.34.0</version>
+    <version>0.35.0</version>
 
     <properties>
         <java.version>21</java.version>
@@ -26,6 +26,10 @@
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
+            <id>github-topaz</id>
+            <url>https://maven.pkg.github.com/FirokOtaku/Topaz</url>
+        </repository>
+        <repository>
             <id>codehaus</id>
             <name>Codehaus</name>
             <url>https://repository.codehaus.org</url>
@@ -41,6 +45,14 @@
             <url>https://packages.jetbrains.team/maven/p/skija/maven</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Maven Packages</name>
+            <url>https://maven.pkg.github.com/FirokOtaku/AlloyWrench</url>
+        </repository>
+    </distributionManagement>
 
 
     <dependencies>
@@ -107,7 +119,7 @@
         <dependency>
             <groupId>firok</groupId>
             <artifactId>topaz</artifactId>
-            <version>5.19.0</version>
+            <version>7.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

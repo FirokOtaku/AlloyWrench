@@ -8,7 +8,7 @@ import java.io.File;
 
 public class ScriptJsonDataLoadTests
 {
-	@Test
+//	@Test
 	void test() throws Exception
 	{
 		var om = new ObjectMapper();

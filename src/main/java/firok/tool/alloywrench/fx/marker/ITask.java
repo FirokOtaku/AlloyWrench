@@ -21,7 +21,7 @@ public interface ITask
 	 * */
 	default double getProgressPercent()
 	{
-		return Maths.range(1D * getProgressNow() / getProgressTotal(), 0, 1);
+		return Maths.range(1D * getProgressNow() / getProgressTotal(), 0D, 1D);
 	}
 
 	default int getProgressPercent100()
