@@ -2,7 +2,7 @@
 
 一些 ~~研究~~ 折腾机器视觉框架时候用到的 ~~工具~~ 轮子代码.
 
-代码基于 ~~**Java 17**~~ **Java 21**, 依赖 [Topaz 库](https://github.com/FirokOtaku/Topaz), 以 MIT 协议开源.
+代码基于 ~~**Java 17**~~ **Java 21**, 依赖 [Topaz 库](https://github.com/FirokOtaku/Topaz), 以木兰宽松许可证 (第二版) 协议开源.
 
 > _为什么用 Java?_  
 > 因为主业是写 Java 的, 写着习惯
