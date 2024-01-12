@@ -17,12 +17,12 @@ public class AlloyWrench
 	public static final ProgramMeta META = new ProgramMeta(
 			"firok.tool.allywrench",
 			"Alloy Wrench",
-			new Version(0, 35, 0),
+			new Version(0, 36, 0),
 			"some util code for learning machine vision",
 			List.of("Firok"),
 			List.of("https://github.com/FirokOtaku/AlloyWrench"),
 			List.of("https://github.com/FirokOtaku/AlloyWrench"),
-			""
+			"MulanPSL2"
 	);
 
 	@Deprecated(forRemoval = true)
@@ -122,6 +122,19 @@ public class AlloyWrench
 //		}
 		else if(compare(args, 6, "merge", "coco", "category"))
 			MergeCocoCategoryTask.execute(args[3], args[4], args[5]);
+
+		else if(compare(args, 4, "coco"))
+		{
+			var arg1 = args[1];
+			if(!Arrays.asList(FixCocoTask.MethodFix, FixCocoTask.MethodCheck).contains(arg1))
+			{
+				System.err.println("未知的操作: " + arg1);
+				return;
+			}
+
+			var shouldFix = FixCocoTask.MethodFix.equals(arg1);
+			FixCocoTask.execute(shouldFix, args[2], args[3]);
+		}
 
 		else if(args.length >= 4 && "filter".equals(args[0]) && "coco".equals(args[1]))
 		{
@@ -265,8 +278,15 @@ public class AlloyWrench
 				* 合并 COCO 标签文件中的种类
 				> merge coco category {label-input} {label-output} {mapping-file}
 				* {label-input} 标签输入
-				* {label-outpu} 标签输出
+				* {label-output} 标签输出
 				* {mapping-file} JSON 格式映射数据
+				
+				* 修复 COCO 标签文件
+				> coco check {image-folder} {label-file}
+				> coco fix {image-folder} {label-file}
+				- {image-folder} 图片目录
+				- {label-file} 标签文件
+				- check 为仅检查 fix 会尝试修复部分错误
 				
 				* 过滤 COCO 标签文件的内容
 				> filter coco {input-label-file} {output-label-file}

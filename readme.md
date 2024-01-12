@@ -165,6 +165,12 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  --filter-anno-id 1 2 3 ^
  --filter-image-id 1 2 3 ^
  --filter-category-id 1 2 3
+ 
+# 修复 coco 数据集标签文件
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ coco fix ^
+ "./images" ^
+ "./coco.json"
 
 # 启动数据标签可视化工具
 java -jar alloy-wrench-jar-with-dependencies.jar ^
@@ -189,6 +195,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.36.0
+  * add fixing tool for COCO dataset annotations file
 * 0.35.0
   * upgrade dependencies versions
   * **[license](license) change to MulanPSL2 from MIT**
