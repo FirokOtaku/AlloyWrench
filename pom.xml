@@ -7,7 +7,7 @@
 
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
-    <version>0.36.0</version>
+    <version>0.37.0</version>
 
     <properties>
         <java.version>21</java.version>

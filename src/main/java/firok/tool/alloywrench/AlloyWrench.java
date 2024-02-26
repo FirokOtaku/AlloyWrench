@@ -17,7 +17,7 @@ public class AlloyWrench
 	public static final ProgramMeta META = new ProgramMeta(
 			"firok.tool.allywrench",
 			"Alloy Wrench",
-			new Version(0, 36, 0),
+			new Version(0, 37, 0),
 			"some util code for learning machine vision",
 			List.of("Firok"),
 			List.of("https://github.com/FirokOtaku/AlloyWrench"),
@@ -72,6 +72,8 @@ public class AlloyWrench
 
 		else if(compare(args, 7, "convert", "coco", "mvtec"))
 			ConvertCocoMvtecTask.execute(args[3], args[4], args[5], args[6]);
+		else if(compare(args, 6, "convert", "coco", "coco-split"))
+			ConvertCocoSplitTask.execute(args[3], args[4], args[5]);
 
 		else if(compare(args, 5, "convert", "labelme", "coco"))
 			ConvertLabelmeCocoTask.execute(args[3], args[4]);
@@ -232,6 +234,12 @@ public class AlloyWrench
 				- {label-file} COCO 标签文件
 				- {mapping-file} 映射文件, 格式详见 GitHub 文档
 				- {target-folder} 储存转换后数据集的目录
+				
+				* 将 COCO 数据集转换为旧版 COCO 数据集
+				> convert coco coco-split {coco-json} {coco-images} {output-folder}
+				- {coco-json} COCO JSON 文件
+				- {coco-images} COCO 图片目录
+				- {output-folder} 输出目录
 				
 				* 将 labelme 数据集 JSON 转换为 YOLO 格式
 				> convert labelme yolo {labelme-file} {yolo-file} {mapping-file}

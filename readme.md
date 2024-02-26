@@ -86,6 +86,13 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
  "./playground/mapping.json" ^
  "./playground/output-dataset"
 
+# 将 COCO 数据集转换为旧版 COCO 数据集
+java -jar alloy-wrench-jar-with-dependencies.jar ^
+ convert coco coco-split ^
+ "./coco.json" ^
+ "./images/" ^
+ "./output"
+
 # 将 labelme 创建的 JSON 数据文件转换为 COCO 格式的
 java -jar alloy-wrench-jar-with-dependencies.jar ^
  convert labelme coco ^
@@ -195,6 +202,8 @@ java -jar alloy-wrench-jar-with-dependencies.jar ^
 
 ## changelog
 
+* 0.37.0
+  * add convert  from coco dataset to old version coco dataset
 * 0.36.0
   * add fixing tool for COCO dataset annotations file
 * 0.35.0
