@@ -33,6 +33,12 @@
     <artifactId>alloy-wrench</artifactId>
     <version>0.35.0</version>
   </dependency>
+
+  <exclusions>
+    <!-- if u only want use Alloy Wrench as code lib, -->
+    <!-- most of dependencies of Alloy Wrench can be excluded -->
+    ...
+  </exclusions>
 </dependencies>
 ```
 
