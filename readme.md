@@ -32,13 +32,13 @@
     <groupId>firok.tool</groupId>
     <artifactId>alloy-wrench</artifactId>
     <version>0.35.0</version>
-  </dependency>
 
-  <exclusions>
-    <!-- if u only want use Alloy Wrench as code lib, -->
-    <!-- most of dependencies of Alloy Wrench can be excluded -->
-    ...
-  </exclusions>
+    <exclusions>
+      <!-- if u only want use Alloy Wrench as code lib, -->
+      <!-- most of dependencies of Alloy Wrench can be excluded -->
+      ...
+    </exclusions>
+  </dependency>
 </dependencies>
 ```
 
